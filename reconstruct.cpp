@@ -172,6 +172,7 @@ void ReadData()
 		int len = neighbor[k].size();
 		for (int i = 0; i != len; i++)
 			vertex[k].sum_weight += neighbor[k][i].weight;
+		printf("Name: %s\tDegree: %lf\t Weight: %lf\n", vertex[k].name, vertex[k].degree, vertex[k].sum_weight);
 	}
 }
 

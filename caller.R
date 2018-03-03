@@ -8,7 +8,7 @@ test <- function(input_file_path) {
   df = read.table(input_file_path)
   df[, 1] = as.character(df[, 1])
   df[, 2] = sapply(df[, 2], as.character)
-  result = rmain(df)
+  result = reconstruct_caller(df)
   return(result)
 }
 
