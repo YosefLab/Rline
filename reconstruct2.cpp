@@ -266,14 +266,14 @@ void ReadData2(const std::vector<std::string> &v1, const std::vector<std::string
 		int len = neighbor[k].size();
 		for (int i = 0; i != len; i++)
 			vertex[k].sum_weight += neighbor[k][i].weight;
-		printf("Name: %s\tDegree: %lf\t Weight: %lf\n", vertex[k].name, vertex[k].degree, vertex[k].sum_weight);
+		//printf("Name: %s\tDegree: %lf\t Weight: %lf\n", vertex[k].name, vertex[k].degree, vertex[k].sum_weight);
 	}
 }
 
 void ReadVectors(std::vector<std::string> &v1, std::vector<std::string> &v2, std::vector<double> &v3) {
 	FILE *fin;
 	char name_v1[MAX_STRING], name_v2[MAX_STRING], str[2 * MAX_STRING + 10000];
-	char train_file[MAX_STRING] = "./test_cases/cases/test4.txt";
+	//char train_file[MAX_STRING] = "./test_cases/cases/test1.txt";
 	double weight;
 
 	fin = fopen(train_file, "rb");
@@ -305,15 +305,15 @@ void TrainLINE2()
 	std::vector<double> iw, ow;
 	InitHashTable();
 	ReadVectors(iu, iv, iw);
-	for (int i = 0; i < (int) iu.size(); i++) {
+	/*for (int i = 0; i < (int) iu.size(); i++) {
 		std::cout << iu[i] << ' ' << iv[i] << ' ' << iw[i] << std::endl; 	
-	}
+	}*/
 	ReadData2(iu, iv, iw);
 	Reconstruct2(ou, ov, ow);
 	printf("Reconstructed Network:\n");
-	for (int i = 0; i < (int) ou.size(); i++) {
+	/*for (int i = 0; i < (int) ou.size(); i++) {
 		printf("%s\t%s\t%lf\n", ou[i].c_str(), ov[i].c_str(), ow[i]);
-	}
+	}*/
 	FILE *fo = fopen(output_file, "wb");
 	for (int i = 0; i < (int) ou.size(); i++) {
 		fprintf(fo, "%s\t%s\t%lf\n", ou[i].c_str(), ov[i].c_str(), ow[i]);

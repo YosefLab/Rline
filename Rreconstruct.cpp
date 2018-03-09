@@ -103,8 +103,6 @@ int AddVertex(char *name)
 
 void Reconstruct2(std::vector<std::string> &v1, std::vector<std::string> &v2, std::vector<double> &w)
 {
-  //FILE *fo = fopen(output_file, "wb");
-  
   int sv, cv, cd, len, pst;
   long long num_edges_renet = 0;
   double cw, sum;
@@ -134,7 +132,6 @@ void Reconstruct2(std::vector<std::string> &v1, std::vector<std::string> &v2, st
     if (len > max_k)
     {
       for (int i = 0; i != len; i++) {
-        //printf("%s\t%s\t%lf\n", vertex[sv].name, vertex[neighbor[sv][i].vid].name, neighbor[sv][i].weight);
         v1.push_back(std::string(vertex[sv].name));
         v2.push_back(std::string(vertex[neighbor[sv][i].vid].name));
         w.push_back(neighbor[sv][i].weight);
@@ -191,7 +188,6 @@ void Reconstruct2(std::vector<std::string> &v1, std::vector<std::string> &v2, st
     for (int i = 0; i != max_k; i++)
     {
       if (i == pst) break;
-      //fprintf(fo, "%s\t%s\t%.6lf\n", vertex[sv].name, vertex[rank_list[i].vid].name, rank_list[i].weight);
       v1.push_back(std::string(vertex[sv].name));
       v2.push_back(std::string(vertex[rank_list[i].vid].name));
       w.push_back(rank_list[i].weight);
@@ -199,8 +195,6 @@ void Reconstruct2(std::vector<std::string> &v1, std::vector<std::string> &v2, st
     }
   }
   printf("\n");
-  //fclose(fo);
-  
   printf("Number of edges in reconstructed network: %lld\n", num_edges_renet);
   return;
 }
@@ -271,56 +265,6 @@ void ReadData2(const std::vector<std::string> &v1, const std::vector<std::string
   }
 }
 
-void ReadVectors(std::vector<std::string> &v1, std::vector<std::string> &v2, std::vector<double> &v3) {
-  FILE *fin;
-  char name_v1[MAX_STRING], name_v2[MAX_STRING], str[2 * MAX_STRING + 10000];
-  char train_file[MAX_STRING] = "./test_cases/cases/test4.txt";
-  double weight;
-  
-  fin = fopen(train_file, "rb");
-  if (fin == NULL)
-  {
-    printf("ERROR: network file not found!\n");
-    exit(1);
-  }
-  
-  num_edges = 0;
-  while (fgets(str, sizeof(str), fin)) num_edges++;
-  fclose(fin);
-  printf("Number of edges: %lld        \n", num_edges);
-  
-  fin = fopen(train_file, "rb");
-  for (int k = 0; k != num_edges; k++)
-  {
-    fscanf(fin, "%s %s %lf", name_v1, name_v2, &weight);
-    v1.push_back(std::string(name_v1));
-    v2.push_back(std::string(name_v2));
-    v3.push_back(weight);
-  }
-  fclose(fin);
-}
-
-void TrainLINE2() 
-{
-  std::vector<std::string> iu, iv, ou, ov;
-  std::vector<double> iw, ow;
-  InitHashTable();
-  ReadVectors(iu, iv, iw);
-  for (int i = 0; i < (int) iu.size(); i++) {
-    std::cout << iu[i] << ' ' << iv[i] << ' ' << iw[i] << std::endl; 	
-  }
-  ReadData2(iu, iv, iw);
-  Reconstruct2(ou, ov, ow);
-  printf("Reconstructed Network:\n");
-  for (int i = 0; i < (int) ou.size(); i++) {
-    printf("%s\t%s\t%lf\n", ou[i].c_str(), ov[i].c_str(), ow[i]);
-  }
-  FILE *fo = fopen(output_file, "wb");
-  for (int i = 0; i < (int) ou.size(); i++) {
-    fprintf(fo, "%s\t%s\t%lf\n", ou[i].c_str(), ov[i].c_str(), ow[i]);
-  }
-}
-
 int ArgPos(char *str, int argc, char **argv) {
   int a;
   for (a = 1; a < argc; a++) if (!strcmp(str, argv[a])) {
@@ -361,7 +305,6 @@ void init(int argc, char **argv) {
 
 // [[Rcpp::export]]
 Rcpp::DataFrame reconstruct_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, Rcpp::NumericVector input_w) {
-  using namespace Rcpp;
   std::vector<std::string> iu(input_u.size()), iv(input_v.size()), ou, ov;
   std::vector<double> iw(input_w.size()), ow;
   for (int i = 0; i < input_u.size(); i++) {
@@ -370,6 +313,7 @@ Rcpp::DataFrame reconstruct_caller(Rcpp::StringVector input_u, Rcpp::StringVecto
     iw[i] = input_w(i);
   }
   init(0, NULL);
+  InitHashTable();
   num_edges = input_u.size();
   ReadData2(iu, iv, iw);
   Reconstruct2(ou, ov, ow);
@@ -382,5 +326,5 @@ Rcpp::DataFrame reconstruct_caller(Rcpp::StringVector input_u, Rcpp::StringVecto
 }
 
 /*** R
-reconstruct_caller(data.frame(c("1", "2", "3"), as.character(seq(2:4)), rep(5, 3)))
+reconstruct_caller(c("1", "2", "3"), as.character(seq(2:4)), rep(5, 3))
 */
