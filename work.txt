@@ -11,15 +11,16 @@ Completed Work
 -write function in R that takes in string and two inputs
 -wrote the function that takes in input and output/changed c++ code to accept vectors and not read/write into output files
 -wrote function that takes in Rcpp as main line command
+-understand how to write package in stat 133
 
 Todo:
-0) understand how to write packages using stat 133 below article 2 hours one day
-1) write Rcpp package day 2
-2) write linker day 3
-3) write string function that takes in command line arguments as sting
+1) write Rcpp package day 2 10
+2) write linker day 3 11
+3) write string function that takes in command line arguments as string 12:30 - 2:30
+Week 5
 4) write the same for all 3 other functions
+Week 6
 5) test and package!
-
 
 -figure out input parameters/pass in as string
 -figure out test cases and finalize

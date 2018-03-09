@@ -73,6 +73,7 @@ void InsertHashTable(char *key, int value)
 int SearchHashTable(char *key)
 {
 	int addr = Hash(key);
+
 	while (1)
 	{
 		if (vertex_hash_table[addr] == -1) return -1;
@@ -102,8 +103,6 @@ int AddVertex(char *name)
 
 void Reconstruct2(std::vector<std::string> &v1, std::vector<std::string> &v2, std::vector<double> &w)
 {
-	//FILE *fo = fopen(output_file, "wb");
-
 	int sv, cv, cd, len, pst;
 	long long num_edges_renet = 0;
 	double cw, sum;
@@ -133,7 +132,6 @@ void Reconstruct2(std::vector<std::string> &v1, std::vector<std::string> &v2, st
 		if (len > max_k)
 		{
 			for (int i = 0; i != len; i++) {
-				//printf("%s\t%s\t%lf\n", vertex[sv].name, vertex[neighbor[sv][i].vid].name, neighbor[sv][i].weight);
 				v1.push_back(std::string(vertex[sv].name));
 				v2.push_back(std::string(vertex[neighbor[sv][i].vid].name));
 				w.push_back(neighbor[sv][i].weight);
@@ -198,14 +196,12 @@ void Reconstruct2(std::vector<std::string> &v1, std::vector<std::string> &v2, st
 		}
 	}
 	printf("\n");
-	//fclose(fo);
-
 	printf("Number of edges in reconstructed network: %lld\n", num_edges_renet);
 	return;
 }
 
 /* Read network from the training file */
-void ReadData2(const std::vector<std::string> &v1, const std::vector<std::string> &v2, const std::vector<double>  w)
+void ReadData2(const std::vector<std::string> &v1, const std::vector<std::string> &v2, const std::vector<double> &w)
 {
 	char name_v1[MAX_STRING], name_v2[MAX_STRING];
 	int vid, u, v;
@@ -266,14 +262,12 @@ void ReadData2(const std::vector<std::string> &v1, const std::vector<std::string
 		int len = neighbor[k].size();
 		for (int i = 0; i != len; i++)
 			vertex[k].sum_weight += neighbor[k][i].weight;
-		//printf("Name: %s\tDegree: %lf\t Weight: %lf\n", vertex[k].name, vertex[k].degree, vertex[k].sum_weight);
 	}
 }
 
 void ReadVectors(std::vector<std::string> &v1, std::vector<std::string> &v2, std::vector<double> &v3) {
 	FILE *fin;
 	char name_v1[MAX_STRING], name_v2[MAX_STRING], str[2 * MAX_STRING + 10000];
-	//char train_file[MAX_STRING] = "./test_cases/cases/test1.txt";
 	double weight;
 
 	fin = fopen(train_file, "rb");
@@ -291,10 +285,11 @@ void ReadVectors(std::vector<std::string> &v1, std::vector<std::string> &v2, std
 	fin = fopen(train_file, "rb");
 	for (int k = 0; k != num_edges; k++)
 	{
-		fscanf(fin, "%s %s %lf", name_v1, name_v2, &weight);
-		v1.push_back(std::string(name_v1));
-		v2.push_back(std::string(name_v2));
-		v3.push_back(weight);
+		if (fscanf(fin, "%s %s %lf", name_v1, name_v2, &weight)) {
+		  v1.push_back(std::string(name_v1));
+		  v2.push_back(std::string(name_v2));
+		  v3.push_back(weight); 
+		}
 	}
 	fclose(fin);
 }
@@ -305,20 +300,29 @@ void TrainLINE2()
 	std::vector<double> iw, ow;
 	InitHashTable();
 	ReadVectors(iu, iv, iw);
-	/*for (int i = 0; i < (int) iu.size(); i++) {
-		std::cout << iu[i] << ' ' << iv[i] << ' ' << iw[i] << std::endl; 	
-	}*/
 	ReadData2(iu, iv, iw);
 	Reconstruct2(ou, ov, ow);
 	printf("Reconstructed Network:\n");
-	/*for (int i = 0; i < (int) ou.size(); i++) {
-		printf("%s\t%s\t%lf\n", ou[i].c_str(), ov[i].c_str(), ow[i]);
-	}*/
 	FILE *fo = fopen(output_file, "wb");
 	for (int i = 0; i < (int) ou.size(); i++) {
 		fprintf(fo, "%s\t%s\t%lf\n", ou[i].c_str(), ov[i].c_str(), ow[i]);
 	}
 }
+
+void rmain(std::vector<std::string> &input_u, std::vector<std::string> &input_v, 
+           std::vector<double> &input_w, std::vector<std::string> &output_u, 
+           std::vector<std::string> &output_v, std::vector<double> &output_w) {
+  InitHashTable();
+  vertex = (struct ClassVertex *)calloc(max_num_vertices, sizeof(struct ClassVertex));
+  num_edges = input_u.size();
+  ReadData2(input_u, input_v, input_w);
+  Reconstruct2(output_u, output_v, output_w);
+  printf("Reconstructed Network:\n");
+  for (int i = 0; i < (int) output_u.size(); i++) {
+    printf("%s\t%s\t%lf\n", output_u[i].c_str(), output_v[i].c_str(), output_w[i]);
+  }    
+}
+
 
 int ArgPos(char *str, int argc, char **argv) {
 	int a;
@@ -331,6 +335,7 @@ int ArgPos(char *str, int argc, char **argv) {
 	}
 	return -1;
 }
+
 
 int main(int argc, char **argv) {
 	int i;
@@ -355,7 +360,5 @@ int main(int argc, char **argv) {
 	if ((i = ArgPos((char *)"-depth", argc, argv)) > 0) max_depth = atoi(argv[i + 1]);
 	if ((i = ArgPos((char *)"-threshold", argc, argv)) > 0) max_k = atoi(argv[i + 1]);
 	vertex = (struct ClassVertex *)calloc(max_num_vertices, sizeof(struct ClassVertex));
-	//TrainLINE();
-	TrainLINE2();
 	return 0;
 }

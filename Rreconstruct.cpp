@@ -200,7 +200,7 @@ void Reconstruct2(std::vector<std::string> &v1, std::vector<std::string> &v2, st
 }
 
 /* Read network from the training file */
-void ReadData2(const std::vector<std::string> &v1, const std::vector<std::string> &v2, const std::vector<double>  w)
+void ReadData2(const std::vector<std::string> &v1, const std::vector<std::string> &v2, const std::vector<double> &w)
 {
   char name_v1[MAX_STRING], name_v2[MAX_STRING];
   int vid, u, v;
@@ -300,7 +300,6 @@ void init(int argc, char **argv) {
   if ((i = ArgPos((char *)"-depth", argc, argv)) > 0) max_depth = atoi(argv[i + 1]);
   if ((i = ArgPos((char *)"-threshold", argc, argv)) > 0) max_k = atoi(argv[i + 1]);
   vertex = (struct ClassVertex *)calloc(max_num_vertices, sizeof(struct ClassVertex));
-  //TrainLINE();
 }
 
 // [[Rcpp::export]]
