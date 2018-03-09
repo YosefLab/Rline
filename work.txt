@@ -14,13 +14,14 @@ Completed Work
 -understand how to write package in stat 133
 
 Todo:
-1) write Rcpp package day 2 10
-2) write linker day 3 11
 3) write string function that takes in command line arguments as string 12:30 - 2:30
 Week 5
 4) write the same for all 3 other functions
+
 Week 6
 5) test and package!
+6) testing and packing is run devtools::load_all() and then check if everything works by writing commands. Then, running devtools::install()/build/rebuild = rebuilds everything. devtools::check() = math every code safe. Lastly, roxygen is good. testthat is good. Finally, write unit tests + keep proper documentation with proper export + import functions. 
+1 write documentation roxygen 2 rebuild 3 write R function that calls the other functions 4 run that function after devtools::load_all() 5 write tests 6 package. 2 hours
 
 -figure out input parameters/pass in as string
 -figure out test cases and finalize
