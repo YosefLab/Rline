@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 #include <string>
 #include <vector>
-#include "reconstruct2.h"
+#include "Rreconstruct.h"
 
 // [[Rcpp::export]]
 Rcpp::DataFrame reconstruct_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, Rcpp::NumericVector input_w) {
@@ -12,7 +12,7 @@ Rcpp::DataFrame reconstruct_caller(Rcpp::StringVector input_u, Rcpp::StringVecto
     iv[i] = input_v(i);
     iw[i] = input_w(i);
   }
-  rmain(iu, iv, iw, ou, ov, ow);
+  reconstruct_main(iu, iv, iw, ou, ov, ow);
   return Rcpp::DataFrame::create(Rcpp::Named("u") = ou, Rcpp::Named("v") = ov, Rcpp::Named("w") = ow);
 }
 

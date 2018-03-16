@@ -12,11 +12,11 @@ Completed Work
 -wrote the function that takes in input and output/changed c++ code to accept vectors and not read/write into output files
 -wrote function that takes in Rcpp as main line command
 -understand how to write package in stat 133
+-string function and debug 9:30
 
-Todo:
-3) write string function that takes in command line arguments as string 12:30 - 2:30
 Week 5
-4) write the same for all 3 other functions
+4) write the same for all 3 other functions 12:00
+
 
 Week 6
 5) test and package!
