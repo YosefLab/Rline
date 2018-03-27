@@ -46,9 +46,11 @@ main <- function() {
     }
     input_df = read.table(sprintf("%s", options$input_file))
     reconstruct_df = reconstruct(input_df, options$max_depth, options$max_k)
+    fout <- file(options$output_file, "w")
     for(j in 1:nrow(reconstruct_df)) {
-      cat(sprintf("%s\t%s\t%f", reconstruct_df[j, 1], reconstruct_df[j, 2], reconstruct_df[j, 3]), file = options$output_file, append = TRUE, sep = '\n')
+      cat(sprintf("%s\t%s\t%f", reconstruct_df[j, 1], reconstruct_df[j, 2], reconstruct_df[j, 3]), file = fout, sep = '\n')
     }
+    close(fout)
   } else if (options$command == "line") {
     warning("Not implemented yet")
   } else if (options$command == "normalize") {
