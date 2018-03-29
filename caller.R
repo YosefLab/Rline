@@ -1,24 +1,7 @@
 #!/usr/bin/Rscript
-library(Rcpp)
-library(RcppArmadillo)
+
+devtools::load_all() # This assumes that we are running in the folder where caller.R is saved
 library("optparse")
-
-sourceCpp("caller.cpp")
-reconstruct <- function(df, max_depth = 1, max_k = 0) {
-  return(reconstruct_caller(as.character(df[, 1]), as.character(df[, 2]), as.numeric(df[, 3]), max_depth, max_k))
-}
-
-line <- function(df, binary = 0, dim = 100, order = 2, negative = 5, samples = 1, rho = 0.025, threads = 1) {
-  return(line_caller(as.character(df[, 1]), as.character(df[, 2]), as.numeric(df[, 3]), binary, dim, order, negative, samples, rho, threads))
-}
-
-normalize <- function(df) {
-  normalize_caller()
-}
-
-concatenate <- function(df) {
-  concatenate_caller()
-}
 
 #Rscript caller.R --command reconstruct --input_file ./test_cases/cases/test$i.txt --output_file ./test_cases/r_outputs/reconstruct$i.txt  --max_depth $max_depth --max_k $max_k
 main <- function() {
@@ -45,8 +28,8 @@ main <- function() {
                 help ="number of total samples in million", metavar="number"),
     make_option(c("-r", "--rho"), type="numeric", default=0.025, 
                 help ="rho value in line", metavar=NULL),
-       make_option(c("-t", "--threads"), type="integer", default=1, 
-                help ="number of threads used in line", metavar="number"),
+    make_option(c("-t", "--threads"), type="integer", default=1, 
+                help ="number of threads used in line", metavar="number")
   ); 
   opt_parser = OptionParser(option_list = option_list);
   options = parse_args(opt_parser);

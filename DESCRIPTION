@@ -1,0 +1,12 @@
+Package: rline
+Title: R wrappers for the line graph-embedding algorithm
+Version: 0.0.1
+Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Description: R wrappers for the line graph-embedding algorithm 
+Depends: R (>= 3.4.3)
+License: TBD
+Encoding: UTF-8
+Imports: Rcpp (>= 0.12.0)
+LinkingTo: Rcpp
+LazyData: true
+RoxygenNote: 6.0.1
