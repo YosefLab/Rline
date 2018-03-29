@@ -598,7 +598,7 @@ int ArgPos(char *str, int argc, char **argv) {
 	return -1;
 }
 
-int main(int argc, char **argv) {
+/*int main(int argc, char **argv) {
 	int i;
 	if (argc == 1) {
 		printf("LINE: Large Information Network Embedding\n\n");
@@ -644,9 +644,9 @@ int main(int argc, char **argv) {
 	TrainLINEMain(input_u, input_v, input_w, output_vertices, output_vectors, is_binary, dim, order, num_negative, total_samples, init_rho, num_threads);
 	OutputVectors(output_vertices, output_vectors);
 
-	/*total_samples *= 1000000;
-	rho = init_rho;
-	vertex = (struct ClassVertex *)calloc(max_num_vertices, sizeof(struct ClassVertex));
-	TrainLINE();*/
-	return 0;
-}
+	//total_samples *= 1000000;
+	//rho = init_rho;
+	//vertex = (struct ClassVertex *)calloc(max_num_vertices, sizeof(struct ClassVertex));
+	//TrainLINE();
+	//return 0;
+} */

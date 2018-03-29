@@ -31,21 +31,21 @@ struct Neighbor
 };
 
 
-char train_file[MAX_STRING], output_file[MAX_STRING];
-struct ClassVertex *vertex;
-int *vertex_hash_table;
-int max_num_vertices = 1000, num_vertices = 0;
-long long num_edges = 0;
+static char train_file[MAX_STRING], output_file[MAX_STRING];
+static struct ClassVertex *vertex;
+static int *vertex_hash_table;
+static int max_num_vertices = 1000, num_vertices = 0;
+static long long num_edges = 0;
 
-int max_depth = 1, max_k = 0;
+static int max_depth = 1, max_k = 0;
 std::vector<int> vertex_set;
 std::vector<Neighbor> *neighbor;
 
-Neighbor *rank_list;
+static Neighbor *rank_list;
 std::map<int, double> vid2weight;
 
 /* Build a hash table, mapping each vertex name to a unique vertex id */
-unsigned int Hash(char *key)
+static unsigned int Hash(char *key)
 {
 	unsigned int seed = 131;
 	unsigned int hash = 0;
@@ -56,20 +56,20 @@ unsigned int Hash(char *key)
 	return hash % hash_table_size;
 }
 
-void InitHashTable()
+static void InitHashTable()
 {
 	vertex_hash_table = (int *)malloc(hash_table_size * sizeof(int));
 	for (int k = 0; k != hash_table_size; k++) vertex_hash_table[k] = -1;
 }
 
-void InsertHashTable(char *key, int value)
+static void InsertHashTable(char *key, int value)
 {
 	int addr = Hash(key);
 	while (vertex_hash_table[addr] != -1) addr = (addr + 1) % hash_table_size;
 	vertex_hash_table[addr] = value;
 }
 
-int SearchHashTable(char *key)
+static int SearchHashTable(char *key)
 {
 	int addr = Hash(key);
 	while (1)
@@ -82,7 +82,7 @@ int SearchHashTable(char *key)
 }
 
 /* Add a vertex to the vertex set */
-int AddVertex(char *name)
+static int AddVertex(char *name)
 {
 	int length = strlen(name) + 1;
 	if (length > MAX_STRING) length = MAX_STRING;
@@ -100,7 +100,7 @@ int AddVertex(char *name)
 }
 
 /* Read network from the training file */
-void ReadData()
+static void ReadData()
 {
 	FILE *fin;
 	char name_v1[MAX_STRING], name_v2[MAX_STRING], str[2 * MAX_STRING + 10000];
@@ -176,7 +176,7 @@ void ReadData()
 	}
 }
 
-void Reconstruct()
+static void Reconstruct()
 {
 	FILE *fo = fopen(output_file, "wb");
 
@@ -273,14 +273,14 @@ void Reconstruct()
 	return;
 }
 
-void TrainLINE()
+static void TrainLINE()
 {
 	InitHashTable();
 	ReadData();
 	Reconstruct();
 }
 
-int ArgPos(char *str, int argc, char **argv) {
+static int ArgPos(char *str, int argc, char **argv) {
 	int a;
 	for (a = 1; a < argc; a++) if (!strcmp(str, argv[a])) {
 		if (a == argc - 1) {
@@ -292,7 +292,7 @@ int ArgPos(char *str, int argc, char **argv) {
 	return -1;
 }
 
-void ReadVectors(std::vector<std::string> &input_u, std::vector<std::string> &input_v, std::vector<double> &input_w) {
+static void ReadVectors(std::vector<std::string> &input_u, std::vector<std::string> &input_v, std::vector<double> &input_w) {
         FILE *fin;
         char name_v1[MAX_STRING], name_v2[MAX_STRING], str[2 * MAX_STRING + 10000];
         double weight;
@@ -321,7 +321,7 @@ void ReadVectors(std::vector<std::string> &input_u, std::vector<std::string> &in
 }
 
 /* Read network from the training file */
-void VectorReadData(const std::vector<std::string> &input_u, const std::vector<std::string> &input_v, const std::vector<double> input_w)
+static void VectorReadData(const std::vector<std::string> &input_u, const std::vector<std::string> &input_v, const std::vector<double> input_w)
 {
 	char name_v1[MAX_STRING], name_v2[MAX_STRING];
 	int vid, u, v;
@@ -387,7 +387,7 @@ void VectorReadData(const std::vector<std::string> &input_u, const std::vector<s
 	}
 }
 
-void VectorReconstruct(std::vector<std::string> &output_u, std::vector<std::string> &output_v, std::vector<double> &output_w)
+static void VectorReconstruct(std::vector<std::string> &output_u, std::vector<std::string> &output_v, std::vector<double> &output_w)
 {
 	int sv, cv, cd, len, pst;
 	long long num_edges_renet = 0;
@@ -485,7 +485,7 @@ void VectorReconstruct(std::vector<std::string> &output_u, std::vector<std::stri
 	return;
 }
 
-bool CheckEquals(std::string input_file, const std::vector<std::string> &input_u, const std::vector<std::string> &input_v,
+static bool CheckEquals(std::string input_file, const std::vector<std::string> &input_u, const std::vector<std::string> &input_v,
            const std::vector<double> &input_w) {
 	strcpy(train_file, input_file.c_str()); 
 	std::vector<std::string> iu, iv; 
@@ -551,7 +551,7 @@ int main(int argc, char **argv) {
 	fclose(fo);
 	return 0;
 
-	/*vertex = (struct ClassVertex *)calloc(max_num_vertices, sizeof(struct ClassVertex));
-	TrainLINE();
-	return 0;*/
+	//vertex = (struct ClassVertex *)calloc(max_num_vertices, sizeof(struct ClassVertex));
+	//TrainLINE();
+	//return 0;
 }
