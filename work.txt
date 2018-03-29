@@ -13,12 +13,29 @@ Completed Work
 -wrote function that takes in Rcpp as main line command
 -understand how to write package in stat 133
 -string function and debug 9:30
+-write the same for all 3 other functions 12:00
+-recheck all the functions and syntaxes
+-exhaustively test inputs 3 and 4 with 1 0, 1 1000, 2 10, 2 100, 2 10000
+-test net_youtube.txt
+-summarize what went wrong
+-with multithreading the results seem to be different. Also if I set the value rho to be zero everything is the same. 
 
-Week 5
-4) write the same for all 3 other functions 12:00
+To do:
+0) tests are with ref_outputs
+1) ask about how to test big outputs
+2) ask about how to test without rho
+3) ask about how to encode binary (rewrite the binary form don't test binary form)
 
 
-Week 6
+Week 7
+-read the program for line
+-rewrite the function for reconstruct 30 min with replacing the printf and fprintf + initializing the functions
+-debug the function for reconstruct 30 min and test on all inputs. at least 5 inputs. 
+-write the function for R to rcpp and rcpp to main. 1 hour  
+-test exhaustively 2 hours 1 hour reading + summarizing how to write rcpp function. 
+
+
+Week 8
 5) test and package!
 6) testing and packing is run devtools::load_all() and then check if everything works by writing commands. Then, running devtools::install()/build/rebuild = rebuilds everything. devtools::check() = math every code safe. Lastly, roxygen is good. testthat is good. Finally, write unit tests + keep proper documentation with proper export + import functions. 
 1 write documentation roxygen 2 rebuild 3 write R function that calls the other functions 4 run that function after devtools::load_all() 5 write tests 6 package. 2 hours

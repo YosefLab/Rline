@@ -20,7 +20,7 @@ concatenate <- function(df) {
   concatenate_caller()
 }
 
-#Rscript caller.R --command reconstruct --input_file ./test_cases/cases/test$i.txt --output_file ./test_cases/r_outputs/reconstruct$i.txt  --max_k $max_k --max_depth $max_depth
+#Rscript caller.R --command reconstruct --input_file ./test_cases/cases/test$i.txt --output_file ./test_cases/r_outputs/reconstruct$i.txt  --max_depth $max_depth --max_k $max_k
 main <- function() {
   option_list = list(
     make_option(c("-c", "--command"), type="character", default=NULL, 
@@ -44,7 +44,15 @@ main <- function() {
     } else if (options$max_depth <= 0) {
       stop("Please enter a positive max_depth or else reconstruct won't work")
     }
-    input_df = read.table(sprintf("%s", options$input_file))
+    input_df = read.table(options$input_file)
+    if (ncol(input_df) == 2) {
+	input_df$new_column <- rep(1, nrow(input_df))
+    }
+    #fout <- file(options$output_file, "w")
+    #for(j in 1:nrow(input_df)) {
+    #   cat(sprintf("%s %s %f", input_df[j, 1], input_df[j, 2], input_df[j, 3]), file = fout, sep = '\n') 
+    #}
+    #close(fout)
     reconstruct_df = reconstruct(input_df, options$max_depth, options$max_k)
     fout <- file(options$output_file, "w")
     for(j in 1:nrow(reconstruct_df)) {
