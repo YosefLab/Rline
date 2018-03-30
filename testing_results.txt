@@ -1,7 +1,7 @@
 Extra Notes:
 -for input files/dataframes, they must be in the form u, v, w. Although Rline can deal with just u, v or unweighted graphs, this updated Rline must be in the form u, v, w so it must be changed to add a w with all weights equal to one
 -changed test5 to be with weighted inputs of all size 1. Moved test5 original under miscellaneous 
-
+-less is more, don't waste time adding weird features, get prototype down, then check for the default arguments not included and null dataframe
 
 Reconstruct Passed Test Inputs
 1 0

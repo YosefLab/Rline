@@ -1,23 +1,48 @@
 #!/usr/bin/Rscript
 
 devtools::load_all() # This assumes that we are running in the folder where caller.R is saved
-library("optparse")
+library(Rcpp)
+library(RcppArmadillo)
+library(optparse)
 
+sourceCpp("src/caller.cpp")
+reconstruct <- function(df = NULL, max_depth = 1, max_k = 0) {
+  return(reconstruct_caller(as.character(df[, 1]), as.character(df[, 2]), as.numeric(df[, 3]), max_depth, max_k))
+}
+
+line <- function(df = NULL, binary = 0, dim = 100, order = 2, negative = 5, samples = 1, rho = 0.025, threads = 1) {
+  lst <- line_caller(as.character(df[, 1]), as.character(df[, 2]), as.numeric(df[, 3]), binary, dim, order, negative, samples, rho, threads)
+  line_df <- data.frame(matrix(ncol = length(lst), nrow = length(lst[[1]])))
+  for (j in 1:length(lst)) {
+    line_df[, j] = lst[[j]]
+  }
+  return(line_df)
+}
+
+
+normalize <- function(df) {
+  normalize_caller()
+}
+
+concatenate <- function(df) {
+  concatenate_caller()
+}
 #Rscript caller.R --command reconstruct --input_file ./test_cases/cases/test$i.txt --output_file ./test_cases/r_outputs/reconstruct$i.txt  --max_depth $max_depth --max_k $max_k
+#Rscript caller.R --command line --input_file ./test_cases/ref_inputs/reconstruct1.txt --output_file ./test_cases/r_outputs/reconstruct1.txt --binary 0 --dim 100 --order 2 --negative 5 --samples 1 --rho 0.025 --threads 1
 main <- function() {
   option_list = list(
     make_option(c("-c", "--command"), type="character", default=NULL, 
-                help="command to execute reconstruct, line, concatenate, or normalize", metavar="character"),
+		help = "enter command among line, reconstruct, normalize, or concatenate"),  
     make_option(c("-i", "--input_file"), type="character", default=NULL, 
                 help="input file destination", metavar="character"),
-    make_option(c("-o", "--output_file"), type="character", default="result.txt", 
+    make_option(c("-o", "--output_file"), type="character", default=NULL, 
                 help="output file destination [default= %default]", metavar="character"),
     make_option(c("-d", "--max_depth"), type="integer", default=1, 
                 help="max_depth parameter", metavar="number"),
     make_option(c("-k", "--max_k"), type="integer", default=0, 
                 help="max_k parameter", metavar="number"),
     make_option(c("-b", "--binary"), type="integer", default=0, 
-                help ="binary format?", metavar="number"),
+                help ="binary format 0 or 1 (no or yes)", metavar="number"),
     make_option(c("-di", "--dim"), type="integer", default=100, 
                 help ="dimensions", metavar="number"),
     make_option(c("-or", "--order"), type="integer", default=2, 
@@ -31,8 +56,10 @@ main <- function() {
     make_option(c("-t", "--threads"), type="integer", default=1, 
                 help ="number of threads used in line", metavar="number")
   ); 
+  
   opt_parser = OptionParser(option_list = option_list);
   options = parse_args(opt_parser);
+
   if (is.null(options$command)) {
       stop("Please enter a command")
   } else if (is.null(options$input_file)) {
@@ -42,10 +69,7 @@ main <- function() {
       stop("Please enter a positive max_depth or else reconstruct won't work")
     }
     input_df = read.table(options$input_file)
-    if (ncol(input_df) == 2) {
-	    input_df$new_column <- rep(1, nrow(input_df))
-    }
-    reconstruct_df = reconstruct(input_df, options$max_depth, options$max_k)
+    reconstruct_df = reconstruct(df = input_df, max_depth = options$max_depth, max_k = options$max_k)
     fout <- file(options$output_file, "w")
     for(j in 1:nrow(reconstruct_df)) {
       cat(sprintf("%s\t%s\t%f", reconstruct_df[j, 1], reconstruct_df[j, 2], reconstruct_df[j, 3]), file = fout, sep = '\n')
@@ -53,12 +77,16 @@ main <- function() {
     close(fout)
   } else if (options$command == "line") {
     input_df = read.table(options$input_file)
-    line_df = line_df(input_df, options$binary, options$dim, options$order, options$negative, options$samples, options$rho, options$threads)
+    line_df = line(df = input_df, binary = options$binary, dim = options$dim, order = options$order, negative = options$negative, samples = options$samples, rho = options$rho, threads = options$threads)
+    cat(sprintf("Binary: %d\nDimensions %d\nOrder %d\nNegative %d\nSamples %d\nRho %f\nThreads %d\n", 	    options$binary, options$dim, options$order, options$negative, options$samples, options$rho, options$threads))
+    #print(line_df)
+    
     fout <- file(options$output_file, "w")
-    for(j in 1:nrow(reconstruct_df)) {
-      cat(sprintf("%s ", reconstruct_df[j, 1]), file = fout)
-      for (k in 2:ncol(reconstruct_df)) {
-        cat(sprintf("%lf "), reconstruct_df[j, k], file = fout)
+    cat(sprintf("%d %d\n", nrow(line_df), ncol(line_df) - 1), file = fout)
+    for(j in 1:nrow(line_df)) {
+      cat(sprintf("%s ", line_df[j, 1]), file = fout)
+      for (k in 2:ncol(line_df)) {
+        cat(sprintf("%f ", line_df[j, k]), file = fout)
       }
       cat(sprintf("\n"), file = fout)
     }

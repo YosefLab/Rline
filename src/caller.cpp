@@ -26,7 +26,7 @@ Rcpp::DataFrame reconstruct_caller(Rcpp::StringVector input_u, Rcpp::StringVecto
 
 
 // [[Rcpp::export]]
-Rcpp::DataFrame line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, Rcpp::NumericVector input_w, int binary = 0, int dim = 100, int order = 2, int negative = 5, int samples = 1, float rho = 0.025, int threads = 1) {
+Rcpp::List line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, Rcpp::NumericVector input_w, int binary = 0, int dim = 100, int order = 2, int negative = 5, int samples = 1, float rho = 0.025, int threads = 1) {
   std::vector<std::string> iu(input_u.size()), iv(input_v.size()), output_vertices;
   std::vector<double> iw(input_w.size());
   std::vector< std::vector<double> > output_vectors;
@@ -35,21 +35,32 @@ Rcpp::DataFrame line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input
     iv[i] = (std::string) input_v(i);
     iw[i] = (double) input_w(i);
   }
-
+  /*for (int i = 0; i < input_u.size(); i++) {
+    printf("%s\t%s\t%lf\n", (char *) iu[i].c_str(), (char *) iv[i].c_str(), iw[i]);
+  }
+  */
   TrainLINEMain(iu, iv, iw, output_vertices, output_vectors, binary, dim, order, negative, samples, rho, threads);
-  
+  /*for (int i = 0; i < output_vectors.size(); i++) {
+    printf("%s ", output_vertices[i].c_str());
+    for (int j = 0; j < output_vectors[i].size(); j++) {
+        printf("%lf ", output_vectors[i][j]);
+    }
+    printf("\n");
+  }*/
   long long row = (long long) output_vectors.size(), col = (long long) output_vectors[0].size();
   Rcpp::StringVector output_v(row);
   output_v = output_vertices;
-  Rcpp::DataFrame df = Rcpp::DataFrame::create(Rcpp::Named("vertice") = output_v);  
+  Rcpp::List mat;   
+  mat.push_back(output_v);
   for (long long c = 0; c < col; c++) {
       Rcpp::NumericVector vec(row);
       for (long long r = 0; r < row; r++) {
         vec[r] = output_vectors[r][c];
       }
-      df.push_back(vec);
+      mat.push_back(vec);
   }
-  return df;
+  
+  return mat;
 }
 
 

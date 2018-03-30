@@ -25,7 +25,9 @@ To do:
 1) ask about how to test big outputs
 2) ask about how to test without rho
 3) ask about how to encode binary (rewrite the binary form don't test binary form)
-
+4) figure out weird inputs like df == null and etc.
+5) change to static all functions and compile (then add GSL at the end don't need to compile like caller.cpp)
+6) ask about Rcpp exports and compile attributes (load all) and how to test efficiently
 
 Week 7
 -read the program for line

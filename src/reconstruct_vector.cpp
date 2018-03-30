@@ -10,7 +10,7 @@
 
 #define MAX_STRING 100
 
-const int hash_table_size = 30000000;
+static const int hash_table_size = 30000000;
 
 typedef float real;                    // Precision of float numbers
 
@@ -516,7 +516,7 @@ void ReconstructMain(const std::vector<std::string> &input_u, const std::vector<
 	VectorReconstruct(output_u, output_v, output_w);
 }
 
-int main(int argc, char **argv) {
+/*int main(int argc, char **argv) {
 	int i;
 	if (argc == 1) {
 		printf("Reconstruct the network by using a Breadth-First-Search strategy\n\n");
@@ -554,4 +554,4 @@ int main(int argc, char **argv) {
 	//vertex = (struct ClassVertex *)calloc(max_num_vertices, sizeof(struct ClassVertex));
 	//TrainLINE();
 	//return 0;
-}
+}*/
