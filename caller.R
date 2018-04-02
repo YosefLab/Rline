@@ -1,32 +1,12 @@
 #!/usr/bin/Rscript
 
 devtools::load_all() # This assumes that we are running in the folder where caller.R is saved
-library(Rcpp)
-library(RcppArmadillo)
 library(optparse)
 
-sourceCpp("src/caller.cpp")
-reconstruct <- function(df = NULL, max_depth = 1, max_k = 0) {
-  return(reconstruct_caller(as.character(df[, 1]), as.character(df[, 2]), as.numeric(df[, 3]), max_depth, max_k))
-}
+#Rscript caller.R --command reconstruct --input_file ./test_cases/cases/test$i.txt --output_file ./test_cases/r_outputs/reconstruct$i.txt  --max_depth $max_depth --max_k $max_k
 
-line <- function(df = NULL, binary = 0, dim = 100, order = 2, negative = 5, samples = 1, rho = 0.025, threads = 1) {
-  lst <- line_caller(as.character(df[, 1]), as.character(df[, 2]), as.numeric(df[, 3]), binary, dim, order, negative, samples, rho, threads)
-  line_df <- data.frame(matrix(ncol = length(lst), nrow = length(lst[[1]])))
-  for (j in 1:length(lst)) {
-    line_df[, j] = lst[[j]]
-  }
-  return(line_df)
-}
+#Rscript caller.R --command line --input_file ./test_cases/ref_inputs/reconstruct1.txt --output_file ./test_cases/r_outputs/line1.txt --binary 0 --dim 2 --order 2 --negative 5 --samples 1 --rho 0.025 --threads 1
 
-
-normalize <- function(df) {
-  normalize_caller()
-}
-
-concatenate <- function(df) {
-  concatenate_caller()
-}
 #Rscript caller.R --command reconstruct --input_file ./test_cases/cases/test$i.txt --output_file ./test_cases/r_outputs/reconstruct$i.txt  --max_depth $max_depth --max_k $max_k
 #Rscript caller.R --command line --input_file ./test_cases/ref_inputs/reconstruct1.txt --output_file ./test_cases/r_outputs/reconstruct1.txt --binary 0 --dim 100 --order 2 --negative 5 --samples 1 --rho 0.025 --threads 1
 main <- function() {

@@ -12,14 +12,11 @@ Publication: Jian Tang, Meng Qu, Mingzhe Wang, Ming Zhang, Jun Yan, Qiaozhu Mei.
 // <u> <v> and <w> are seperated by ' ' or '\t' (blank or tab)
 // For UNDIRECTED edge, the user should use two DIRECTED edges to represent it.
 
-// [[Rcpp::depends(RcppGSL)]]
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <pthread.h>
-#include <RcppGSL.h>
 #include <gsl/gsl_rng.h>
 #include <vector> 
 #include <string> 
