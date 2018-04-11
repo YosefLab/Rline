@@ -127,13 +127,70 @@ void ReadVector()
 	printf("Vector size 2: %lld\n", vector_dim2);
 }
 
+void ReadVectorStandard()
+{
+	char ch, name[MAX_STRING];
+	real f_num;
+	long long l;
+
+	FILE *fi = fopen(vector_file1, "rb");
+	if (fi == NULL) {
+		printf("Vector file 1 not found\n");
+		exit(1);
+	}
+	fscanf(fi, "%lld %lld", &num_vertices, &vector_dim1);
+	vertex = (struct ClassVertex *)calloc(num_vertices, sizeof(struct ClassVertex));
+	vec1 = (real *)calloc(num_vertices * vector_dim1, sizeof(real));
+	for (long long k = 0; k != num_vertices; k++)
+	{
+		fscanf(fi, "%s", name);
+		ch = fgetc(fi);
+		AddVertex(name, k);
+		l = k * vector_dim1;
+		for (int c = 0; c != vector_dim1; c++)
+		{
+			//fread(&f_num, sizeof(real), 1, fi);
+			fscanf(fi, "%f ", &f_num);
+			vec1[c + l] = (real)f_num;
+		}
+	}
+	fclose(fi);
+
+	fi = fopen(vector_file2, "rb");
+	if (fi == NULL) {
+		printf("Vector file 2 not found\n");
+		exit(1);
+	}
+	fscanf(fi, "%lld %lld", &l, &vector_dim2);
+	vec2 = (real *)calloc((num_vertices + 1) * vector_dim2, sizeof(real));
+	for (long long k = 0; k != num_vertices; k++)
+	{
+		fscanf(fi, "%s", name);
+		ch = fgetc(fi);
+		int i = SearchHashTable(name);
+		if (i == -1) l = num_vertices * vector_dim2;
+		else l = i * vector_dim2;
+		for (int c = 0; c != vector_dim2; c++)
+		{
+			//fread(&f_num, sizeof(real), 1, fi);
+			fscanf(fi, "%f ", &f_num);
+			vec2[c + l] = (real)f_num;
+		}
+	}
+	fclose(fi);
+
+	printf("Vocab size: %lld\n", num_vertices);
+	printf("Vector size 1: %lld\n", vector_dim1);
+	printf("Vector size 2: %lld\n", vector_dim2);
+}
+
 
 void TrainModel() {
 	long long a, b;
 	double len;
 
 	InitHashTable();
-	ReadVector();
+	ReadVectorStandard(); //ReadVector();
 
 	FILE *fo;
 	fo = fopen(output_file, "wb");
@@ -145,6 +202,7 @@ void TrainModel() {
 		for (b = 0; b < vector_dim1; b++) len += vec1[b + a * vector_dim1] * vec1[b + a * vector_dim1];
 		len = sqrt(len);
 		for (b = 0; b < vector_dim1; b++) vec1[b + a * vector_dim1] /= len;
+
 
 		len = 0;
 		for (b = 0; b < vector_dim2; b++) len += vec2[b + a * vector_dim2] * vec2[b + a * vector_dim2];

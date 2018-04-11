@@ -4,12 +4,13 @@
 #include <stdio.h>
 #include "reconstruct_vector.h"
 #include "line_vector.h"
+#include "concatenate_vector.h"
 
 // [[Rcpp::export]]
 Rcpp::DataFrame reconstruct_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, Rcpp::NumericVector input_w, int max_depth = 1, int max_k = 0) {
   std::vector<std::string> iu(input_u.size()), iv(input_v.size()), ou, ov;
   std::vector<double> iw(input_w.size()), ow;
-  for (int i = 0; i < input_u.size(); i++) {
+  for (long long i = 0; i < input_u.size(); i++) {
     iu[i] = (std::string) input_u(i);
     iv[i] = (std::string) input_v(i);
     iw[i] = (double) input_w(i);
@@ -30,23 +31,14 @@ Rcpp::List line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, R
   std::vector<std::string> iu(input_u.size()), iv(input_v.size()), output_vertices;
   std::vector<double> iw(input_w.size());
   std::vector< std::vector<double> > output_vectors;
-  for (int i = 0; i < input_u.size(); i++) {
+  for (long long i = 0; i < input_u.size(); i++) {
     iu[i] = (std::string) input_u(i);
     iv[i] = (std::string) input_v(i);
     iw[i] = (double) input_w(i);
   }
-  /*for (int i = 0; i < input_u.size(); i++) {
-    printf("%s\t%s\t%lf\n", (char *) iu[i].c_str(), (char *) iv[i].c_str(), iw[i]);
-  }
-  */
+
   TrainLINEMain(iu, iv, iw, output_vertices, output_vectors, binary, dim, order, negative, samples, rho, threads);
-  /*for (int i = 0; i < output_vectors.size(); i++) {
-    printf("%s ", output_vertices[i].c_str());
-    for (int j = 0; j < output_vectors[i].size(); j++) {
-        printf("%lf ", output_vectors[i][j]);
-    }
-    printf("\n");
-  }*/
+
   long long row = (long long) output_vectors.size(), col = (long long) output_vectors[0].size();
   Rcpp::StringVector output_v(row);
   output_v = output_vertices;
@@ -63,11 +55,65 @@ Rcpp::List line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, R
   return mat;
 }
 
+// [[Rcpp::export]]
+Rcpp::List concatenate_caller(Rcpp::DataFrame input_one, Rcpp::DataFrame input_two, int binary = 0) {
+  Rcpp::StringVector first_order_v = input_one[0], second_order_v = input_two[0];
+  long long first_order_rows = (long long) first_order_v.size(), first_order_cols = (long long) input_one.size() - 1;
+  long long second_order_rows = (long long) second_order_v.size(), second_order_cols = (long long) input_two.size() - 1;
+  std::vector<std::string> first_order_vertices(first_order_rows), second_order_vertices(first_order_rows), output_vertices;
+  std::vector< std::vector<double> > first_order_features(first_order_rows), second_order_features(second_order_rows), output_features;
+  Rcpp::NumericVector first_order_f, second_order_f;
 
-/*FILE *file = fopen("caller_result.txt", "w");
- printf("Debugging Result:\n");
- for (int i = 0; i < (int) ou.size(); i++) {
- fprintf(file, "%s\t%s\t%lf\n", ou[i].c_str(), ov[i].c_str(), ow[i]);
- }
- fclose(file);
-*/
+  for (long long i = 0; i < (long long) first_order_rows; i++) {
+    first_order_vertices[i] = (std::string) first_order_v[i];
+    first_order_features[i] = std::vector<double>(first_order_cols);
+  }
+  for (long long i = 0; i < (long long) second_order_rows; i++) {
+    second_order_vertices[i] = (std::string) second_order_v[i];
+    second_order_features[i] = std::vector<double>(second_order_cols);
+  }
+  for (long long i = 0; i < first_order_cols; i++) {
+    first_order_f = input_one[i + 1];
+    for (long long j = 0; j < first_order_rows; j++) {
+        first_order_features[j][i] = first_order_f[j]; 
+    }
+  }
+  for (long long i = 0; i < second_order_cols; i++) {
+    second_order_f = input_two[i + 1];
+    for (long long j = 0; j < second_order_rows; j++) {
+        second_order_features[j][i] = second_order_f[j]; 
+    }
+  }
+  
+  /*printf("First Order:\n");
+  for (long long i = 0; i < (long long) first_order_features.size(); i++) {
+    printf("%s ", first_order_vertices[i].c_str());
+    for (long long j = 0; j < (long long) first_order_features[i].size(); j++) {
+        printf("%lf ", first_order_features[i][j]);
+    } printf("\n");
+  }
+  printf("Second Order:\n");
+  for (long long i = 0; i < (long long) second_order_features.size(); i++) {
+    printf("%s ", second_order_vertices[i].c_str());
+    for (long long j = 0; j < (long long) second_order_features[i].size(); j++) {
+        printf("%lf ", second_order_features[i][j]);
+    } printf("\n");
+  }*/
+  
+  ConcatenateMain(first_order_vertices, second_order_vertices, output_vertices, first_order_features, second_order_features, output_features, binary);
+
+  long long row = (long long) output_features.size(), col = (long long) output_features[0].size();
+  Rcpp::StringVector output_v(row);
+  output_v = output_vertices;
+  Rcpp::List mat;   
+  mat.push_back(output_v);
+  for (long long c = 0; c < col; c++) {
+      Rcpp::NumericVector vec(row);
+      for (long long r = 0; r < row; r++) {
+        vec[r] = output_features[r][c];
+      }
+      mat.push_back(vec);
+  }
+  return mat;
+}
+

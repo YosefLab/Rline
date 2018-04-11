@@ -11,12 +11,16 @@ line <- function(df = NULL, binary = 0, dim = 100, order = 2, negative = 5, samp
   return(line_df)
 }
 
+concatenate <- function(input_one, input_two, binary = 0) {
+	lst <- concatenate_caller(input_one, input_two, binary)
+	concatenate_df <- data.frame(matrix(ncol = length(lst), nrow = length(lst[[1]])))
+	for (j in 1:length(lst)) {
+	  concatenate_df[, j] = lst[[j]]
+	}
+	return(concatenate_df)
+}
+
 
 normalize <- function(df) {
   normalize_caller()
 }
-
-concatenate <- function(df) {
-  concatenate_caller()
-}
-

@@ -19,9 +19,18 @@ Completed Work
 -test net_youtube.txt
 -summarize what went wrong
 -with multithreading the results seem to be different. Also if I set the value rho to be zero everything is the same. 
+-due to safety and time constraints I refuse to write the march=native compilation standards into the functions. That is why I test line without the march=native and testing compilations and it will all work. This is good because I don't need it to be a little faster for the sake of crashing 
+-100% sure binary file just fread and fwrite integers
+-definitely only works with binary
+-order 2 binary 1 everything else vanilla
+-travis.yml
+-inputs are in binary, order, and test case #
+-removed/changed the outputs within concatenate to be read from file as opposed to read from binary to assimilate to files
+-may be floating point error but that doesn't matter, and more importantly is too hard to fix, and lastly shouldn't happen because everything is passed in as doubles. printf may lose precision but in real algorithm precision is not lost
+-new algorithm is simple and cannot generate the binary format due to the fact that you do not have printing out functions. you can add that feature. 
+-actually okay if binary output is different because it references the pointer of the binary value and so I don't really understand that but as long as the value is good it is all good 
 
-To do:
-0) tests are with ref_outputs
+tests are with ref_outputs
 1) ask about how to test big outputs
 2) ask about how to test without rho
 3) ask about how to encode binary (rewrite the binary form don't test binary form)
@@ -29,12 +38,24 @@ To do:
 5) change to static all functions and compile (then add GSL at the end don't need to compile like caller.cpp)
 6) ask about Rcpp exports and compile attributes (load all) and how to test efficiently
 
-Week 7
 -read the program for line
 -rewrite the function for reconstruct 30 min with replacing the printf and fprintf + initializing the functions
 -debug the function for reconstruct 30 min and test on all inputs. at least 5 inputs. 
 -write the function for R to rcpp and rcpp to main. 1 hour  
 -test exhaustively 2 hours 1 hour reading + summarizing how to write rcpp function. 
+
+
+-read the fread all 15 min
+-write the C code 15 min
+-finish the R code 15 min 
+-buffer 15 min
+-15 min testing 
+
+-read the normalize 15 min
+-write the C code 15 min 
+-write teh R code 15 min
+-15 min testing 
+-30 min full testing. 
 
 
 Week 8
