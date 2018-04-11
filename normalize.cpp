@@ -29,7 +29,7 @@ void Normalize()
 	for (a = 0; a < num_vertices; a++)
 	{
 		fscanf(fi, "%s%c", name, &ch);
-		for (b = 0; b < vector_dim; b++) fread(&vec[b], sizeof(real), 1, fi);
+		for (b = 0; b < vector_dim; b++) fscanf(fi, "%f ", &vec[b]); //fread(&vec[b], sizeof(real), 1, fi);
 		len = 0;
 		for (b = 0; b < vector_dim; b++) len += vec[b] * vec[b];
 		len = sqrt(len);

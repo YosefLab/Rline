@@ -3,6 +3,7 @@
 devtools::load_all() # This assumes that we are running in the folder where caller.R is saved
 library(optparse)
 
+#Rscript caller.R --command concatenate --normalize 1 --input_file_1 ./test_cases/ref_inputs/line_1_1.txt --input_file_2 ./test_cases/ref_inputs/line_2_1.txt --output_file ./test_cases/r_outputs/concatenate_1.txt
 #Rscript caller.R --command concatenate --input_file_1 ./test_cases/ref_inputs/line_1_1.txt --input_file_2 ./test_cases/ref_inputs/line_2_1.txt --output_file ./test_cases/r_outputs/concatenate_1.txt
 #Rscript caller.R --command reconstruct --input_file ./test_cases/cases/test$i.txt --output_file ./test_cases/r_outputs/reconstruct$i.txt  --max_depth $max_depth --max_k $max_k
 #Rscript caller.R --command line --input_file ./test_cases/ref_inputs/reconstruct1.txt --output_file ./test_cases/r_outputs/line1.txt --binary 0 --dim 2 --order 2 --negative 5 --samples 1 --rho 0.025 --threads 1
@@ -51,16 +52,16 @@ main <- function() {
     if (options$max_depth <= 0) {
       stop("Please enter a positive max_depth or else reconstruct won't work")
     }
-    input_df = read.table(options$input_file)
-    reconstruct_df = reconstruct(df = input_df, max_depth = options$max_depth, max_k = options$max_k)
+    input_df <- read.table(options$input_file)
+    reconstruct_df <- reconstruct(df = input_df, max_depth = options$max_depth, max_k = options$max_k)
     fout <- file(options$output_file, "w")
     for(j in 1:nrow(reconstruct_df)) {
       cat(sprintf("%s\t%s\t%f", reconstruct_df[j, 1], reconstruct_df[j, 2], reconstruct_df[j, 3]), file = fout, sep = '\n')
     }
     close(fout)
   } else if (options$command == "line") {
-    input_df = read.table(options$input_file)
-    line_df = line(df = input_df, binary = options$binary, dim = options$dim, order = options$order, negative = options$negative, samples = options$samples, rho = options$rho, threads = options$threads)
+    input_df <- read.table(options$input_file)
+    line_df <- line(df = input_df, binary = options$binary, dim = options$dim, order = options$order, negative = options$negative, samples = options$samples, rho = options$rho, threads = options$threads)
     cat(sprintf("Binary: %d\nDimensions %d\nOrder %d\nNegative %d\nSamples %d\nRho %f\nThreads %d\n", 	    options$binary, options$dim, options$order, options$negative, options$samples, options$rho, options$threads))
     
     fout <- file(options$output_file, "w")
@@ -77,10 +78,9 @@ main <- function() {
     if (is.null(options$input_file_1) || is.null(options$input_file_2)) {
       stop("Please enter both an input_file_1 and input_file_2 to concatenate your files")
     }
-    input_df_one = read.table(options$input_file_1, skip = 1)
-    input_df_two = read.table(options$input_file_2, skip = 1)
-    concatenate_df = concatenate(input_one = input_df_one, input_two = input_df_two, binary = options$binary)
-    
+    input_df_one <- read.table(options$input_file_1, skip = 1)
+    input_df_two <- read.table(options$input_file_2, skip = 1)
+    concatenate_df <- concatenate(input_one = input_df_one, input_two = input_df_two, binary = options$binary)
     fout <- file(options$output_file, "w")
     cat(sprintf("%d %d\n", nrow(concatenate_df), ncol(concatenate_df) - 1), file = fout)
     for(j in 1:nrow(concatenate_df)) {
@@ -92,9 +92,20 @@ main <- function() {
     }
     close(fout)
   } else if (options$command == "normalize") {
-    warning("Not implemented yet")
+    input_df <- read.table(options$input_file, skip = 1)
+    normalize_df <- normalize(input_df)
+    fout <- file(options$output_file, "w")
+    cat(sprintf("%d %d\n", nrow(normalize_df), ncol(normalize_df) - 1), file = fout)
+    for(j in 1:nrow(normalize_df)) {
+      cat(sprintf("%s ", normalize_df[j, 1]), file = fout)
+      for (k in 2:ncol(normalize_df)) {
+        cat(sprintf("%f ", normalize_df[j, k]), file = fout)
+      }
+      cat(sprintf("\n"), file = fout)
+    }
+    close(fout)
   } else {
-    stop("Please enter a valid command. Your command choices include reconstruct, line, concatenate, and normalize")
+    stop("Please enter a valid command. Your command choices include reconstruct, line, and concatenate")
   }
 }
 

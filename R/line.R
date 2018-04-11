@@ -22,5 +22,15 @@ concatenate <- function(input_one, input_two, binary = 0) {
 
 
 normalize <- function(df) {
-  normalize_caller()
+  for (i in 1:nrow(df)) {
+    len = 0.0
+    for (j in 2:ncol(df)) {
+      len = len + (df[i, j] * df[i, j])
+    }
+    len = sqrt(len)
+    for (j in 2:ncol(df)) {
+       df[i, j] = df[i, j] / len
+    }
+  }
+  return(df);
 }

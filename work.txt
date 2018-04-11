@@ -29,6 +29,17 @@ Completed Work
 -may be floating point error but that doesn't matter, and more importantly is too hard to fix, and lastly shouldn't happen because everything is passed in as doubles. printf may lose precision but in real algorithm precision is not lost
 -new algorithm is simple and cannot generate the binary format due to the fact that you do not have printing out functions. you can add that feature. 
 -actually okay if binary output is different because it references the pointer of the binary value and so I don't really understand that but as long as the value is good it is all good 
+-normalize is just summing up all elements and dividing.
+-implemented normalize with the function that you add it as an option and can call your dataframe with it the only difference is that your function in Rscript adds a normalize function to test it. functionality exactly the same great. but your testing function just uses it and does some extra calculations. okay cool
+-exactly how its supposed to be. 
+-implemented tests
+-implemented basic syntax checks and DRY's 
+-need to remember to document that within the R cran package
+-floating point errors
+
+-need to test in 3 hours
+-write testhat. and roxygen. 
+-rpackge + continuous integration. 
 
 tests are with ref_outputs
 1) ask about how to test big outputs
