@@ -20,7 +20,6 @@ concatenate <- function(input_one, input_two, binary = 0) {
 	return(concatenate_df)
 }
 
-
 normalize <- function(df) {
   for (i in 1:nrow(df)) {
     len = 0.0

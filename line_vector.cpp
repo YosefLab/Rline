@@ -25,9 +25,9 @@ Publication: Jian Tang, Meng Qu, Mingzhe Wang, Ming Zhang, Jun Yan, Qiaozhu Mei.
 #define SIGMOID_BOUND 6
 #define NEG_SAMPLING_POWER 0.75
 
-const int hash_table_size = 30000000;
-const int neg_table_size = 1e8;
-const int sigmoid_table_size = 1000;
+static const int hash_table_size = 30000000;
+static const int neg_table_size = 1e8;
+static const int sigmoid_table_size = 1000;
 
 typedef float real;                    // Precision of float numbers
 
@@ -36,27 +36,27 @@ struct ClassVertex {
 	char *name;
 };
 
-char network_file[MAX_STRING], embedding_file[MAX_STRING];
-struct ClassVertex *vertex;
-int is_binary = 0, num_threads = 1, order = 2, dim = 100, num_negative = 5;
-int *vertex_hash_table, *neg_table;
-int max_num_vertices = 1000, num_vertices = 0;
-long long total_samples = 1, current_sample_count = 0, num_edges = 0;
-real init_rho = 0.025, rho;
-real *emb_vertex, *emb_context, *sigmoid_table;
+static char network_file[MAX_STRING], embedding_file[MAX_STRING];
+static struct ClassVertex *vertex;
+static int is_binary = 0, num_threads = 1, order = 2, dim = 100, num_negative = 5;
+static int *vertex_hash_table, *neg_table;
+static int max_num_vertices = 1000, num_vertices = 0;
+static long long total_samples = 1, current_sample_count = 0, num_edges = 0;
+static real init_rho = 0.025, rho;
+static real *emb_vertex, *emb_context, *sigmoid_table;
 
-int *edge_source_id, *edge_target_id;
-double *edge_weight;
+static int *edge_source_id, *edge_target_id;
+static double *edge_weight;
 
 // Parameters for edge sampling
-long long *alias;
-double *prob;
+static long long *alias;
+static double *prob;
 
-const gsl_rng_type * gsl_T;
-gsl_rng * gsl_r;
+static const gsl_rng_type * gsl_T;
+static gsl_rng * gsl_r;
 
 /* Build a hash table, mapping each vertex name to a unique vertex id */
-unsigned int Hash(char *key)
+static unsigned int Hash(char *key)
 {
 	unsigned int seed = 131;
 	unsigned int hash = 0;
@@ -67,20 +67,20 @@ unsigned int Hash(char *key)
 	return hash % hash_table_size;
 }
 
-void InitHashTable()
+static void InitHashTable()
 {
 	vertex_hash_table = (int *)malloc(hash_table_size * sizeof(int));
 	for (int k = 0; k != hash_table_size; k++) vertex_hash_table[k] = -1;
 }
 
-void InsertHashTable(char *key, int value)
+static void InsertHashTable(char *key, int value)
 {
 	int addr = Hash(key);
 	while (vertex_hash_table[addr] != -1) addr = (addr + 1) % hash_table_size;
 	vertex_hash_table[addr] = value;
 }
 
-int SearchHashTable(char *key)
+static int SearchHashTable(char *key)
 {
 	int addr = Hash(key);
 	while (1)
@@ -93,7 +93,7 @@ int SearchHashTable(char *key)
 }
 
 /* Add a vertex to the vertex set */
-int AddVertex(char *name)
+static int AddVertex(char *name)
 {
 	int length = strlen(name) + 1;
 	if (length > MAX_STRING) length = MAX_STRING;
@@ -110,64 +110,8 @@ int AddVertex(char *name)
 	return num_vertices - 1;
 }
 
-/* Read network from the training file */
-void ReadData()
-{
-	FILE *fin;
-	char name_v1[MAX_STRING], name_v2[MAX_STRING], str[2 * MAX_STRING + 10000];
-	int vid;
-	double weight;
-
-	fin = fopen(network_file, "rb");
-	if (fin == NULL)
-	{
-		printf("ERROR: network file not found!\n");
-		exit(1);
-	}
-	num_edges = 0;
-	while (fgets(str, sizeof(str), fin)) num_edges++;
-	fclose(fin);
-	printf("Number of edges: %lld          \n", num_edges);
-
-	edge_source_id = (int *)malloc(num_edges*sizeof(int));
-	edge_target_id = (int *)malloc(num_edges*sizeof(int));
-	edge_weight = (double *)malloc(num_edges*sizeof(double));
-	if (edge_source_id == NULL || edge_target_id == NULL || edge_weight == NULL)
-	{
-		printf("Error: memory allocation failed!\n");
-		exit(1);
-	}
-
-	fin = fopen(network_file, "rb");
-	num_vertices = 0;
-	for (int k = 0; k != num_edges; k++)
-	{
-		fscanf(fin, "%s %s %lf", name_v1, name_v2, &weight);
-
-		if (k % 10000 == 0)
-		{
-			printf("Reading edges: %.3lf%%%c", k / (double)(num_edges + 1) * 100, 13);
-			fflush(stdout);
-		}
-
-		vid = SearchHashTable(name_v1);
-		if (vid == -1) vid = AddVertex(name_v1);
-		vertex[vid].degree += weight;
-		edge_source_id[k] = vid;
-
-		vid = SearchHashTable(name_v2);
-		if (vid == -1) vid = AddVertex(name_v2);
-		vertex[vid].degree += weight;
-		edge_target_id[k] = vid;
-
-		edge_weight[k] = weight;
-	}
-	fclose(fin);
-	printf("Number of vertices: %d          \n", num_vertices);
-}
-
 /* The alias sampling algorithm, which is used to sample an edge in O(1) time. */
-void InitAliasTable()
+static void InitAliasTable()
 {
 	alias = (long long *)malloc(num_edges*sizeof(long long));
 	prob = (double *)malloc(num_edges*sizeof(double));
@@ -222,14 +166,14 @@ void InitAliasTable()
 	free(large_block);
 }
 
-long long SampleAnEdge(double rand_value1, double rand_value2)
+static long long SampleAnEdge(double rand_value1, double rand_value2)
 {
 	long long k = (long long)num_edges * rand_value1;
 	return rand_value2 < prob[k] ? k : alias[k];
 }
 
 /* Initialize the vertex embedding and the context embedding */
-void InitVector()
+static void InitVector()
 {
 	srand(1);
 	long long a, b;
@@ -246,7 +190,7 @@ void InitVector()
 }
 
 /* Sample negative vertex samples according to vertex degrees */
-void InitNegTable()
+static void InitNegTable()
 {
 	double sum = 0, cur_sum = 0, por = 0;
 	int vid = 0;
@@ -265,7 +209,7 @@ void InitNegTable()
 }
 
 /* Fastly compute sigmoid function */
-void InitSigmoidTable()
+static void InitSigmoidTable()
 {
 	real x;
 	sigmoid_table = (real *)malloc((sigmoid_table_size + 1) * sizeof(real));
@@ -276,7 +220,7 @@ void InitSigmoidTable()
 	}
 }
 
-real FastSigmoid(real x)
+static real FastSigmoid(real x)
 {
 	if (x > SIGMOID_BOUND) return 1;
 	else if (x < -SIGMOID_BOUND) return 0;
@@ -285,14 +229,14 @@ real FastSigmoid(real x)
 }
 
 /* Fastly generate a random integer */
-int Rand(unsigned long long &seed)
+static int Rand(unsigned long long &seed)
 {
 	seed = seed * 25214903917 + 11;
 	return (seed >> 16) % neg_table_size;
 }
 
 /* Update embeddings */
-void Update(real *vec_u, real *vec_v, real *vec_error, int label)
+static void Update(real *vec_u, real *vec_v, real *vec_error, int label)
 {
 	real x = 0, g;
 	for (int c = 0; c != dim; c++) x += vec_u[c] * vec_v[c];
@@ -301,7 +245,7 @@ void Update(real *vec_u, real *vec_v, real *vec_error, int label)
 	for (int c = 0; c != dim; c++) vec_v[c] += g * vec_u[c];
 }
 
-void *TrainLINEThread(void *id)
+static void *TrainLINEThread(void *id)
 {
 	long long u, v, lu, lv, target, label;
 	long long count = 0, last_count = 0, curedge;
@@ -355,78 +299,13 @@ void *TrainLINEThread(void *id)
 	pthread_exit(NULL);
 }
 
-void Output()
-{
-	FILE *fo = fopen(embedding_file, "wb");
-	fprintf(fo, "%d %d\n", num_vertices, dim);
-	for (int a = 0; a < num_vertices; a++)
-	{
-		fprintf(fo, "%s ", vertex[a].name);
-		if (is_binary) for (int b = 0; b < dim; b++) fwrite(&emb_vertex[a * dim + b], sizeof(real), 1, fo);
-		else for (int b = 0; b < dim; b++) fprintf(fo, "%lf ", emb_vertex[a * dim + b]);
-		fprintf(fo, "\n");
-	}
-	fclose(fo);
-}
-
-
-void TrainLINE() {
-	long a;
-	pthread_t *pt = (pthread_t *)malloc(num_threads * sizeof(pthread_t));
-
-	if (order != 1 && order != 2)
-	{
-		printf("Error: order should be either 1 or 2!\n");
-		exit(1);
-	}
-	printf("--------------------------------\n");
-	printf("Order: %d\n", order);
-	printf("Samples: %lldM\n", total_samples / 1000000);
-	printf("Negative: %d\n", num_negative);
-	printf("Dimension: %d\n", dim);
-	printf("Initial rho: %lf\n", init_rho);
-	printf("--------------------------------\n");
-
-	InitHashTable();
-	ReadData();
-	InitAliasTable();
-	InitVector();
-	InitNegTable();
-	InitSigmoidTable();
-
-	gsl_rng_env_setup();
-	gsl_T = gsl_rng_rand48;
-	gsl_r = gsl_rng_alloc(gsl_T);
-	gsl_rng_set(gsl_r, 314159265);
-
-	clock_t start = clock();
-	printf("--------------------------------\n");
-	for (a = 0; a < num_threads; a++) pthread_create(&pt[a], NULL, TrainLINEThread, (void *)a);
-	for (a = 0; a < num_threads; a++) pthread_join(pt[a], NULL);
-	printf("\n");
-	clock_t finish = clock();
-	printf("Total time: %lf\n", (double)(finish - start) / CLOCKS_PER_SEC);
-
-	Output();
-}
-
 /* Read network from the training file */
-void VectorReadData(const std::vector<std::string> &input_u, const std::vector<std::string> &input_v, const std::vector<double> &input_w)
+static void VectorReadData(const std::vector<std::string> &input_u, const std::vector<std::string> &input_v, const std::vector<double> &input_w)
 {
-	//FILE *fin;
-	char name_v1[MAX_STRING], name_v2[MAX_STRING], str[2 * MAX_STRING + 10000];
+	char name_v1[MAX_STRING], name_v2[MAX_STRING];
 	int vid;
 	double weight;
 
-	/*fin = fopen(network_file, "rb");
-	if (fin == NULL)
-	{
-		printf("ERROR: network file not found!\n");
-		exit(1);
-	}
-	num_edges = 0;
-	while (fgets(str, sizeof(str), fin)) num_edges++;
-	fclose(fin);*/
 	num_edges = (long long) input_u.size();
 	printf("Number of edges: %lld          \n", num_edges);
 
@@ -439,11 +318,9 @@ void VectorReadData(const std::vector<std::string> &input_u, const std::vector<s
 		exit(1);
 	}
 
-	//fin = fopen(network_file, "rb");
 	num_vertices = 0;
 	for (int k = 0; k != num_edges; k++)
 	{
-		//fscanf(fin, "%s %s %lf", name_v1, name_v2, &weight);
 		strcpy(name_v1, input_u[k].c_str());
 		strcpy(name_v2, input_v[k].c_str());
 		weight = input_w[k];
@@ -466,31 +343,23 @@ void VectorReadData(const std::vector<std::string> &input_u, const std::vector<s
 
 		edge_weight[k] = weight;
 	}
-	//fclose(fin);
 	printf("Number of vertices: %d          \n", num_vertices);
 }
 
-void VectorOutput(std::vector<std::string> &output_vertices, std::vector< std::vector<double> > &output_vectors)
+static void VectorOutput(std::vector<std::string> &output_vertices, std::vector< std::vector<double> > &output_vectors)
 {
-	//FILE *fo = fopen(embedding_file, "wb");
-	//fprintf(fo, "%d %d\n", num_vertices, dim);
 	for (int a = 0; a < num_vertices; a++)
 	{
-		//fprintf(fo, "%s ", vertex[a].name);
 		output_vertices.push_back(std::string(vertex[a].name));
 		std::vector<double> vec;
 		for (int b = 0; b < dim; b++) {
 			vec.push_back(emb_vertex[a * dim + b]);
 		}
 		output_vectors.push_back(vec);
-		//if (is_binary) for (int b = 0; b < dim; b++) fwrite(&emb_vertex[a * dim + b], sizeof(real), 1, fo);
-		//else for (int b = 0; b < dim; b++) fprintf(fo, "%lf ", emb_vertex[a * dim + b]);
-		//fprintf(fo, "\n");
 	}
-	//fclose(fo);
 }
 
-void OutputVectors(std::vector<std::string> &output_vertices, std::vector< std::vector<double> > &output_vectors)
+static void OutputVectors(std::vector<std::string> &output_vertices, std::vector< std::vector<double> > &output_vectors)
 {
 	FILE *fo = fopen(embedding_file, "wb");
 	fprintf(fo, "%d %d\n", num_vertices, dim);
@@ -559,7 +428,7 @@ void TrainLINEMain(const std::vector<std::string> &input_u, const std::vector<st
 	VectorOutput(output_vertices, output_vectors); //Output();
 }
 
-void ReadVectors(std::vector<std::string> &input_u, std::vector<std::string> &input_v, std::vector<double> &input_w) {
+static void ReadVectors(std::vector<std::string> &input_u, std::vector<std::string> &input_v, std::vector<double> &input_w) {
         FILE *fin;
         char name_v1[MAX_STRING], name_v2[MAX_STRING], str[2 * MAX_STRING + 10000];
         double weight;
@@ -586,7 +455,7 @@ void ReadVectors(std::vector<std::string> &input_u, std::vector<std::string> &in
         fclose(fin);
 }
 
-int ArgPos(char *str, int argc, char **argv) {
+static int ArgPos(char *str, int argc, char **argv) {
 	int a;
 	for (a = 1; a < argc; a++) if (!strcmp(str, argv[a])) {
 		if (a == argc - 1) {
@@ -643,10 +512,5 @@ int main(int argc, char **argv) {
 	ReadVectors(input_u, input_v, input_w);
 	TrainLINEMain(input_u, input_v, input_w, output_vertices, output_vectors, is_binary, dim, order, num_negative, total_samples, init_rho, num_threads);
 	OutputVectors(output_vertices, output_vectors);
-
-	//total_samples *= 1000000;
-	//rho = init_rho;
-	//vertex = (struct ClassVertex *)calloc(max_num_vertices, sizeof(struct ClassVertex));
-	//TrainLINE();
-	//return 0;
+	return 0;
 } 

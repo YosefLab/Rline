@@ -14,7 +14,7 @@ typedef float real;                    // Precision of float numbers
 struct ClassVertex {
 	double degree;
 	char *name;
-};ls
+};
 
 static char vector_file1[MAX_STRING], vector_file2[MAX_STRING], output_file[MAX_STRING];
 static struct ClassVertex *vertex;
@@ -223,35 +223,4 @@ static int ArgPos(char *str, int argc, char **argv) {
 		return a;
 	}
 	return -1;
-}
-
-int main(int argc, char **argv) {
-	int i;
-	if (argc == 1) {
-		printf("Concatenate the 1st-order embedding and the 2nd-order embeddings\n\n");
-		printf("Options:\n");
-		printf("Parameters for training:\n");
-		printf("\t-input1 <file>\n");
-		printf("\t\tThe 1st-order embeddings\n");
-		printf("\t-input2 <file>\n");
-		printf("\t\tThe 2nd-order embeddings\n");
-		printf("\t-output <file>\n");
-		printf("\t\tUse <file> to save the concatenated embeddings\n");
-		printf("\t-binary <int>\n");
-		printf("\t\tSave the learnt embeddings in binary moded; default is 0 (off)\n");
-		printf("\nExamples:\n");
-		printf("./concatenate -input1 vec_1st.txt -input2 vec_2nd.txt -output vec_all.txt -binary 1\n\n");
-		return 0;
-	}
-	if ((i = ArgPos((char *)"-input1", argc, argv)) > 0) strcpy(vector_file1, argv[i + 1]);
-	if ((i = ArgPos((char *)"-input2", argc, argv)) > 0) strcpy(vector_file2, argv[i + 1]);
-	if ((i = ArgPos((char *)"-output", argc, argv)) > 0) strcpy(output_file, argv[i + 1]);
-	if ((i = ArgPos((char *)"-binary", argc, argv)) > 0) binary = atoi(argv[i + 1]);
-	
-	std::vector<std::string> first_order_vertices, second_order_vertices, output_vertices; 
-	std::vector< std::vector<double> > first_order_features, second_order_features, output_features;
-	ReadVectors(first_order_vertices, second_order_vertices, first_order_features, second_order_features);
-	ConcatenateMain(first_order_vertices, second_order_vertices, output_vertices, first_order_features, second_order_features, output_features, 0);
-	OutputVectors(output_vertices, output_features);
-	return 0;
 }

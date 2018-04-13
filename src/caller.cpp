@@ -24,8 +24,6 @@ Rcpp::DataFrame reconstruct_caller(Rcpp::StringVector input_u, Rcpp::StringVecto
   return Rcpp::DataFrame::create(Rcpp::Named("u") = output_u, Rcpp::Named("v") = output_v, Rcpp::Named("w") = output_w);
 }
 
-
-
 // [[Rcpp::export]]
 Rcpp::List line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, Rcpp::NumericVector input_w, int binary = 0, int dim = 100, int order = 2, int negative = 5, int samples = 1, float rho = 0.025, int threads = 1) {
   std::vector<std::string> iu(input_u.size()), iv(input_v.size()), output_vertices;
@@ -51,7 +49,6 @@ Rcpp::List line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, R
       }
       mat.push_back(vec);
   }
-  
   return mat;
 }
 
@@ -84,21 +81,6 @@ Rcpp::List concatenate_caller(Rcpp::DataFrame input_one, Rcpp::DataFrame input_t
         second_order_features[j][i] = second_order_f[j]; 
     }
   }
-  
-  /*printf("First Order:\n");
-  for (long long i = 0; i < (long long) first_order_features.size(); i++) {
-    printf("%s ", first_order_vertices[i].c_str());
-    for (long long j = 0; j < (long long) first_order_features[i].size(); j++) {
-        printf("%lf ", first_order_features[i][j]);
-    } printf("\n");
-  }
-  printf("Second Order:\n");
-  for (long long i = 0; i < (long long) second_order_features.size(); i++) {
-    printf("%s ", second_order_vertices[i].c_str());
-    for (long long j = 0; j < (long long) second_order_features[i].size(); j++) {
-        printf("%lf ", second_order_features[i][j]);
-    } printf("\n");
-  }*/
   
   ConcatenateMain(first_order_vertices, second_order_vertices, output_vertices, first_order_features, second_order_features, output_features, binary);
 

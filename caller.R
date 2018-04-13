@@ -3,16 +3,10 @@
 devtools::load_all() # This assumes that we are running in the folder where caller.R is saved
 library(optparse)
 
-#Rscript caller.R --command concatenate --normalize 1 --input_file_1 ./test_cases/ref_inputs/line_1_1.txt --input_file_2 ./test_cases/ref_inputs/line_2_1.txt --output_file ./test_cases/r_outputs/concatenate_1.txt
-#Rscript caller.R --command concatenate --input_file_1 ./test_cases/ref_inputs/line_1_1.txt --input_file_2 ./test_cases/ref_inputs/line_2_1.txt --output_file ./test_cases/r_outputs/concatenate_1.txt
-#Rscript caller.R --command reconstruct --input_file ./test_cases/cases/test$i.txt --output_file ./test_cases/r_outputs/reconstruct$i.txt  --max_depth $max_depth --max_k $max_k
-#Rscript caller.R --command line --input_file ./test_cases/ref_inputs/reconstruct1.txt --output_file ./test_cases/r_outputs/line1.txt --binary 0 --dim 2 --order 2 --negative 5 --samples 1 --rho 0.025 --threads 1
-#Rscript caller.R --command reconstruct --input_file ./test_cases/cases/test$i.txt --output_file ./test_cases/r_outputs/reconstruct$i.txt  --max_depth $max_depth --max_k $max_k
-#Rscript caller.R --command line --input_file ./test_cases/ref_inputs/reconstruct1.txt --output_file ./test_cases/r_outputs/reconstruct1.txt --binary 0 --dim 100 --order 2 --negative 5 --samples 1 --rho 0.025 --threads 1
 main <- function() {
   option_list <- list(
     make_option(c("-c", "--command"), type = "character", default = NULL, 
-		            help = "enter command among line, reconstruct, normalize, or concatenate"),  
+		help = "enter command among line, reconstruct, normalize, or concatenate"),  
     make_option(c("-i", "--input_file"), type = "character", default = NULL, 
                 help = "input file destination", metavar = "character"),
     make_option(c("-o", "--output_file"), type = "character", default = NULL, 

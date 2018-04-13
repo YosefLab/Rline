@@ -13,9 +13,6 @@ passed_cases=0
 
 for (( i=1; i < ${test_cases}+1; i++ ));
 do 
-	#cmd="./train_line_vector.sh ${binary[$i-1]} ${dim[$i-1]} ${order[$i-1]} ${negative[$i-1]}
-	#    ${sample[$i-1]} ${rho[$i-1]} ${threads[$i-1]}"
-	#res=`eval $cmd`
 	cmd="./train_line_vector.sh ${binary[$i-1]} ${dim[$i-1]} ${order[$i-1]} ${negative[$i-1]}
 	   ${sample[$i-1]} ${rho[$i-1]} ${threads[$i-1]}"
 	eval $cmd
