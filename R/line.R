@@ -11,5 +11,5 @@ concatenate <- function(input_one, input_two, binary = 0) {
 }
 
 normalize <- function(input_matrix) {
-  return(input_matrix / rowSums(input_matrix * input_matrix))
+  return(input_matrix / sqrt(rowSums(input_matrix * input_matrix)))
 }
