@@ -25,7 +25,7 @@ Rcpp::DataFrame reconstruct_caller(Rcpp::StringVector input_u, Rcpp::StringVecto
 }
 
 // [[Rcpp::export]]
-Rcpp::List line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, Rcpp::NumericVector input_w, int binary = 0, int dim = 100, int order = 2, int negative = 5, int samples = 1, float rho = 0.025, int threads = 1) {
+Rcpp::NumericMatrix line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, Rcpp::NumericVector input_w, int binary = 0, int dim = 100, int order = 2, int negative = 5, int samples = 1, float rho = 0.025, int threads = 1) {
   std::vector<std::string> iu(input_u.size()), iv(input_v.size()), output_vertices;
   std::vector<double> iw(input_w.size());
   std::vector< std::vector<double> > output_vectors;
@@ -38,18 +38,16 @@ Rcpp::List line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, R
   TrainLINEMain(iu, iv, iw, output_vertices, output_vectors, binary, dim, order, negative, samples, rho, threads);
 
   long long row = (long long) output_vectors.size(), col = (long long) output_vectors[0].size();
-  Rcpp::StringVector output_v(row);
-  output_v = output_vertices;
-  Rcpp::List mat;   
-  mat.push_back(output_v);
-  for (long long c = 0; c < col; c++) {
-      Rcpp::NumericVector vec(row);
-      for (long long r = 0; r < row; r++) {
-        vec[r] = output_vectors[r][c];
+  Rcpp::NumericMatrix feature_matrix(row, col);
+  Rcpp::StringVector vertice_names(row);
+  vertice_names = output_vertices;
+  Rcpp::rownames(feature_matrix) = vertice_names;
+  for (long long r = 0; r < row; r++) {
+      for (long long c = 0; c < col; c++) {
+        feature_matrix(r, c) = output_vectors[r][c];
       }
-      mat.push_back(vec);
   }
-  return mat;
+  return feature_matrix;
 }
 
 // [[Rcpp::export]]
@@ -87,15 +85,15 @@ Rcpp::List concatenate_caller(Rcpp::DataFrame input_one, Rcpp::DataFrame input_t
   long long row = (long long) output_features.size(), col = (long long) output_features[0].size();
   Rcpp::StringVector output_v(row);
   output_v = output_vertices;
-  Rcpp::List mat;   
-  mat.push_back(output_v);
+  Rcpp::List matrix;   
+  matrix.push_back(output_v);
   for (long long c = 0; c < col; c++) {
       Rcpp::NumericVector vec(row);
       for (long long r = 0; r < row; r++) {
         vec[r] = output_features[r][c];
       }
-      mat.push_back(vec);
+      matrix.push_back(vec);
   }
-  return mat;
+  return matrix;
 }
 

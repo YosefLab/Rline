@@ -56,13 +56,14 @@ main <- function() {
   } else if (options$command == "line") {
     input_df <- read.table(options$input_file)
     line_df <- line(df = input_df, binary = options$binary, dim = options$dim, order = options$order, negative = options$negative, samples = options$samples, rho = options$rho, threads = options$threads)
+    feature_names <- row.names(line_df)
     cat(sprintf("Binary: %d\nDimensions %d\nOrder %d\nNegative %d\nSamples %d\nRho %f\nThreads %d\n", 	    options$binary, options$dim, options$order, options$negative, options$samples, options$rho, options$threads))
     
     fout <- file(options$output_file, "w")
-    cat(sprintf("%d %d\n", nrow(line_df), ncol(line_df) - 1), file = fout)
+    cat(sprintf("%d %d\n", nrow(line_df), ncol(line_df)), file = fout)
     for(j in 1:nrow(line_df)) {
-      cat(sprintf("%s ", line_df[j, 1]), file = fout)
-      for (k in 2:ncol(line_df)) {
+      cat(sprintf("%s ", feature_names[j]), file = fout)
+      for (k in 1:ncol(line_df)) {
         cat(sprintf("%f ", line_df[j, k]), file = fout)
       }
       cat(sprintf("\n"), file = fout)

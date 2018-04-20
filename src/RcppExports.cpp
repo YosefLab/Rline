@@ -21,7 +21,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // line_caller
-Rcpp::List line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, Rcpp::NumericVector input_w, int binary, int dim, int order, int negative, int samples, float rho, int threads);
+Rcpp::NumericMatrix line_caller(Rcpp::StringVector input_u, Rcpp::StringVector input_v, Rcpp::NumericVector input_w, int binary, int dim, int order, int negative, int samples, float rho, int threads);
 RcppExport SEXP _rline_line_caller(SEXP input_uSEXP, SEXP input_vSEXP, SEXP input_wSEXP, SEXP binarySEXP, SEXP dimSEXP, SEXP orderSEXP, SEXP negativeSEXP, SEXP samplesSEXP, SEXP rhoSEXP, SEXP threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
