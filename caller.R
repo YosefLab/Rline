@@ -55,16 +55,16 @@ main <- function() {
     close(fout)
   } else if (options$command == "line") {
     input_df <- read.table(options$input_file)
-    line_df <- line(df = input_df, binary = options$binary, dim = options$dim, order = options$order, negative = options$negative, samples = options$samples, rho = options$rho, threads = options$threads)
-    feature_names <- row.names(line_df)
+    line_matrix <- line(df = input_df, binary = options$binary, dim = options$dim, order = options$order, negative = options$negative, samples = options$samples, rho = options$rho, threads = options$threads)
+    feature_names <- row.names(line_matrix)
     cat(sprintf("Binary: %d\nDimensions %d\nOrder %d\nNegative %d\nSamples %d\nRho %f\nThreads %d\n", 	    options$binary, options$dim, options$order, options$negative, options$samples, options$rho, options$threads))
     
     fout <- file(options$output_file, "w")
-    cat(sprintf("%d %d\n", nrow(line_df), ncol(line_df)), file = fout)
-    for(j in 1:nrow(line_df)) {
+    cat(sprintf("%d %d\n", nrow(line_matrix), ncol(line_matrix)), file = fout)
+    for(j in 1:nrow(line_matrix)) {
       cat(sprintf("%s ", feature_names[j]), file = fout)
-      for (k in 1:ncol(line_df)) {
-        cat(sprintf("%f ", line_df[j, k]), file = fout)
+      for (k in 1:ncol(line_matrix)) {
+        cat(sprintf("%f ", line_matrix[j, k]), file = fout)
       }
       cat(sprintf("\n"), file = fout)
     }
@@ -75,26 +75,36 @@ main <- function() {
     }
     input_df_one <- read.table(options$input_file_1, skip = 1)
     input_df_two <- read.table(options$input_file_2, skip = 1)
-    concatenate_df <- concatenate(input_one = input_df_one, input_two = input_df_two, binary = options$binary)
+    rownames(input_df_one) <- input_df_one[, 1]
+    rownames(input_df_two) <- input_df_two[, 1]
+    input_matrix_one = as.matrix(input_df_one[2:ncol(input_df_one)])
+    input_matrix_two = as.matrix(input_df_two[2:ncol(input_df_two)])  
+    concatenate_matrix <- concatenate(input_one = input_matrix_one, input_two = input_matrix_two, binary = options$binary)
+    feature_names <- row.names(concatenate_matrix)    
+
     fout <- file(options$output_file, "w")
-    cat(sprintf("%d %d\n", nrow(concatenate_df), ncol(concatenate_df) - 1), file = fout)
-    for(j in 1:nrow(concatenate_df)) {
-      cat(sprintf("%s ", concatenate_df[j, 1]), file = fout)
-      for (k in 2:ncol(concatenate_df)) {
-        cat(sprintf("%f ", concatenate_df[j, k]), file = fout)
+    cat(sprintf("%d %d\n", nrow(concatenate_matrix), ncol(concatenate_matrix)), file = fout)
+    for(j in 1:nrow(concatenate_matrix)) {
+      cat(sprintf("%s ", feature_names[j]), file = fout)
+      for (k in 1:ncol(concatenate_matrix)) {
+        cat(sprintf("%f ", concatenate_matrix[j, k]), file = fout)
       }
       cat(sprintf("\n"), file = fout)
     }
     close(fout)
   } else if (options$command == "normalize") {
     input_df <- read.table(options$input_file, skip = 1)
-    normalize_df <- normalize(input_df)
+    rownames(input_df) <- input_df[, 1]
+    input_matrix <- as.matrix(input_df[2:ncol(input_df)])
+    normalize_matrix <- normalize(input_matrix)
+    feature_names <- row.names(normalize_matrix)
+
     fout <- file(options$output_file, "w")
-    cat(sprintf("%d %d\n", nrow(normalize_df), ncol(normalize_df) - 1), file = fout)
-    for(j in 1:nrow(normalize_df)) {
-      cat(sprintf("%s ", normalize_df[j, 1]), file = fout)
-      for (k in 2:ncol(normalize_df)) {
-        cat(sprintf("%f ", normalize_df[j, k]), file = fout)
+    cat(sprintf("%d %d\n", nrow(normalize_matrix), ncol(normalize_matrix)), file = fout)
+    for(j in 1:nrow(normalize_matrix)) {
+      cat(sprintf("%s ", feature_names[j]), file = fout)
+      for (k in 1:ncol(normalize_matrix)) {
+        cat(sprintf("%f ", normalize_matrix[j, k]), file = fout)
       }
       cat(sprintf("\n"), file = fout)
     }

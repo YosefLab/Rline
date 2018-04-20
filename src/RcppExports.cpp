@@ -41,15 +41,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // concatenate_caller
-Rcpp::List concatenate_caller(Rcpp::DataFrame input_one, Rcpp::DataFrame input_two, int binary);
-RcppExport SEXP _rline_concatenate_caller(SEXP input_oneSEXP, SEXP input_twoSEXP, SEXP binarySEXP) {
+Rcpp::NumericMatrix concatenate_caller(Rcpp::NumericMatrix input_one, Rcpp::NumericMatrix input_two, Rcpp::StringVector first_order_v, Rcpp::StringVector second_order_v, int binary);
+RcppExport SEXP _rline_concatenate_caller(SEXP input_oneSEXP, SEXP input_twoSEXP, SEXP first_order_vSEXP, SEXP second_order_vSEXP, SEXP binarySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type input_one(input_oneSEXP);
-    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type input_two(input_twoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type input_one(input_oneSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type input_two(input_twoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type first_order_v(first_order_vSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type second_order_v(second_order_vSEXP);
     Rcpp::traits::input_parameter< int >::type binary(binarySEXP);
-    rcpp_result_gen = Rcpp::wrap(concatenate_caller(input_one, input_two, binary));
+    rcpp_result_gen = Rcpp::wrap(concatenate_caller(input_one, input_two, first_order_v, second_order_v, binary));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -57,7 +59,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_rline_reconstruct_caller", (DL_FUNC) &_rline_reconstruct_caller, 5},
     {"_rline_line_caller", (DL_FUNC) &_rline_line_caller, 10},
-    {"_rline_concatenate_caller", (DL_FUNC) &_rline_concatenate_caller, 3},
+    {"_rline_concatenate_caller", (DL_FUNC) &_rline_concatenate_caller, 5},
     {NULL, NULL, 0}
 };
 

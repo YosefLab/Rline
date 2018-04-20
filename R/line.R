@@ -7,24 +7,9 @@ line <- function(df = NULL, binary = 0, dim = 100, order = 2, negative = 5, samp
 }
 
 concatenate <- function(input_one, input_two, binary = 0) {
-  lst <- concatenate_caller(input_one, input_two, binary)
-  concatenate_df <- data.frame(matrix(ncol = length(lst), nrow = length(lst[[1]])))
-  for (j in 1:length(lst)) {
-    concatenate_df[, j] = lst[[j]]
-  }
-  return(concatenate_df)
+  return(concatenate_caller(input_one, input_two, rownames(input_one), rownames(input_two), binary))
 }
 
-normalize <- function(df) {
-  for (i in 1:nrow(df)) {
-    len = 0.0
-    for (j in 2:ncol(df)) {
-      len = len + (df[i, j] * df[i, j])
-    }
-    len = sqrt(len)
-    for (j in 2:ncol(df)) {
-       df[i, j] = df[i, j] / len
-    }
-  }
-  return(df);
+normalize <- function(input_matrix) {
+  return(input_matrix / rowSums(input_matrix * input_matrix))
 }

@@ -9,7 +9,7 @@ line_caller <- function(input_u, input_v, input_w, binary = 0L, dim = 100L, orde
     .Call('_rline_line_caller', PACKAGE = 'rline', input_u, input_v, input_w, binary, dim, order, negative, samples, rho, threads)
 }
 
-concatenate_caller <- function(input_one, input_two, binary = 0L) {
-    .Call('_rline_concatenate_caller', PACKAGE = 'rline', input_one, input_two, binary)
+concatenate_caller <- function(input_one, input_two, first_order_v, second_order_v, binary = 0L) {
+    .Call('_rline_concatenate_caller', PACKAGE = 'rline', input_one, input_two, first_order_v, second_order_v, binary)
 }
 
