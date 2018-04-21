@@ -148,7 +148,6 @@ void ReadData()
 	for (long long k = 0; k != num_edges; k++)
 	{
 		fscanf(fin, "%s %s %lf", name_v1, name_v2, &weight);
-
 		if (k % 10000 == 0)
 		{
 			printf("Reading neighbors: %.3lf%%%c", k / (double)(num_edges + 1) * 100, 13);

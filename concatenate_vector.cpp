@@ -14,7 +14,7 @@ typedef float real;                    // Precision of float numbers
 struct ClassVertex {
 	double degree;
 	char *name;
-};ls
+};
 
 static char vector_file1[MAX_STRING], vector_file2[MAX_STRING], output_file[MAX_STRING];
 static struct ClassVertex *vertex;
