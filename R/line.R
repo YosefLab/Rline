@@ -155,11 +155,13 @@ concatenate <- function(input_one, input_two, binary = 0) {
 #'
 #' @description  
 #' This function normalizes each row vector with the formula row = row / || row ||.
-#'
+#' 
 #' @details 
 #' This function normalizes each row vector with the formula row = row / || row ||. This website
 #' \url{https://www.khanacademy.org/computing/computer-programming/programming-natural-simulations/programming-vectors/a/vector-magnitude-normalization} is a good explanation of this normalization.
-#'
+#' The output has floating point differences with the original line algorithm's normalize function
+#' because R has different floating point arithmetic than C++.
+#' 
 #' @param input_matrix numeric matrix that will be normalized. 
 #'
 #' @seealso 
