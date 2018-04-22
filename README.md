@@ -16,12 +16,12 @@ bad of 4
 of bad 4
 ```
 
-### Running RLine
-You can run the package with devtools::load_all() and then call the four functions. The algorithm's work flow is reconstruct -> line -> concatenate -> normalize. Please reference the documentation and examples within the documentation for more information on the specific parameters, inputs, and outputs of each function.
+### Running Rline
+You can run the package with devtools::load_all() and then call the four functions. The algorithm's work flow is reconstruct -> line -> concatenate -> normalize. Please reference the documentation and examples for more information on the specific parameters, inputs, and outputs of each function.
 
 
-### RLine Results
-After calling Rline you should get an embedded graph representation of your original input encoded in a numeric matrix format. The row names represent the vertices of the embedded graph. Each row of the numeric matrix represents the weights of that row vertice. 
+### Rline Results
+After calling Rline, you should get an embedded graph representation of your original input. This embedded graph should be encoded in a numeric matrix format. The row names represent the vertices of the embedded graph. Each row of the numeric matrix represents the weights of that row vertice. 
 ```
 good -0.172447 -0.137203 -0.217762 -0.563915 0.293286 0.423504 0.522185 -0.172056 0.066339 -0.118167 
 the -0.173197 -0.137063 -0.218054 -0.563202 0.294062 0.487632 -0.234309 -0.242937 0.189593 0.335188 
@@ -30,10 +30,10 @@ of 0.173371 0.136696 0.218381 0.563457 -0.293398 0.261021 0.204188 0.214662 0.58
 ```
 
 ### Testing 
-Reference the train.sh file to see all the compilation and examples on how to run the functions 
+Reference the train.sh file to see all the compilation and examples on how to run the functions.
 Under test_scripts there are test scripts you can run to verify the validity of the algorithm's respective functions.
 
 
-### Further Notes
-There are some minute differences between this line algorithm and the original algorithm. First, unlike the original line C++ files, this R wrapper has C++ files that are compiled without the compiler options -march=native and -Ofast. This is too reduce the randomness of the algorithm outputs and increase the compatability of this algorithm at the cost of slightly slower computation times. There are also some precision differences in the normalize function due to floating point arithmetic differences between C++ and R (roughly 1e-6 in magnitude). The test scripts on the normalize and concatenate functions read from regular double and string input formats as opposed to binary input formats as in the original line algorithm. Please call all functions with binary option set to 0 as Rline cannot output binary encoded formats.
+### Differences and Further Notes
+There are some minute differences between Rline and LINE. First, unlike the original LINE, Rline wraps the original LINE files compiled without the options -march=native and -Ofast. This is too reduce the randomness of the LINE algorithm outputs and increase the compatability of the original LINE algorithm. This comes at a cost of slightly slower computation times for all functions. Next, there are some precision differences between the LINE and Rline normalize function due to floating point arithmetic differences between C++ and R (roughly 1e-6 in magnitude). Finally, the test scripts in the normalize and concatenate functions read from regular .txt files (with strings and doubles as input and output) as opposed to the original LINE algorithm which inputs and outputs binary formatted data. Please call all functions with binary option set to 0 as Rline cannot output binary formatted data.
 
