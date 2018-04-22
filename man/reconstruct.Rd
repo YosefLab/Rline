@@ -8,16 +8,18 @@ reconstruct(df, max_depth = 1, max_k = 0)
 }
 \arguments{
 \item{df}{edge list representation of the graph in the form u, v, w. Three columns 
-are in this dataframe. The edges are directed which means edge u -> v has weight w. 
+are in this dataframe. Each of the columns represent a list of vertices u, list of vertices
+v, and list of weights w. The edges are directed which means edge u -> v has weight w. 
 To represent an undirected graph just input edges u, v, w and v, u, w.
 The first column and second column represent the u and v vertices with 
 character types. The third column represented the weight of the edges. Each row 
 represents a weighted edge in the graph.}
 
-\item{max_depth}{The maximum depth in the Breadth-First-Search. Default is 1, never input 0.}
+\item{max_depth}{The maximum depth in the Breadth-First-Search of reconstruct. 
+Default is 1, never input 0.}
 
-\item{max_k}{For vertex whose degree is less than max_k, we will expand its neighbors 
-until the degree reaches max_k}
+\item{max_k}{For vertex whose degree is less than max_k, reconstruct will expand its neighbors 
+until the degree reaches max_k. Default is 0.}
 }
 \value{
 a reconstructed graph that can be inputted directly into the line function. 
@@ -38,7 +40,7 @@ gain a better understanding of what each parameter does please look at the
 the line paper in references and the implementation in the github link.
 This function returns a reconstructed graph as a dataframe in the form u, v, w.
 This reconstructed graph can be passed into line to run the main line algorithm for 
-graph embedding
+graph embedding.
 }
 \examples{
 u <- c("good", "the", "bad")

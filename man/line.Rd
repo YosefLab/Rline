@@ -39,8 +39,9 @@ row name/feature/vertice.
 }
 \description{
 This function runs the line algorithm on your reconstructed edge list graph and returns a  
-numeric matrix. Each row represents one vertice with the row name being the name of the vertice
-The row has a list of weights (all numeric values) all describing the row feature/name
+numeric matrix. Each row represents one vertice of the embedded graph with the row name 
+being the name of the vertice. Each row has a list of weights (all numeric values) 
+all describing the row vertice.
 }
 \details{
 This is a function which takes a graph represented in edge list form as input.  
@@ -54,7 +55,9 @@ the line paper in references and the implementation in the github link.
 An important parameter is that you can run this algorithm on multiple threads 
 to speed up the runtime. The results are not deterministic if you run this algorithm 
 for more than one thread. Another important parameter is that you can train the line algorithm
-on two orders, one and two which return different numeric matrices for the same graph input.
+on two orders, order 1 and order 2 which return different numeric matrices 
+for the same graph input. There are other parameters which determine the amount of sampling, 
+negative sampling, learning rate, etc. of the algorithm which you should look into.
 This function returns a reduced graph represented in the form of a numeric matrix.
 This numeric matrix has row names describing the vertices with each vertice  
 This reconstructed graph can be passed into line to run the main line algorithm for 

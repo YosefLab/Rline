@@ -2,55 +2,19 @@
 % Please edit documentation in R/line.R
 \name{normalize}
 \alias{normalize}
-\title{}
+\title{Normalize Graph Embedding}
 \usage{
 normalize(input_matrix)
 }
 \arguments{
-\item{df}{edge list representation of the graph in the form u, v, w. Three columns 
-are in this dataframe. The edges are directed which means edge u -> v has weight w. 
-To represent an undirected graph just input edges u, v, w and v, u, w.
-The first column and second column represent the u and v vertices with 
-character types. The third column represented the weight of the edges. Each row 
-represents a weighted edge in the graph.}
-
-\item{binary}{Save the learnt embeddings in binary moded; This should always be 0
-because R cannot represent binary formats}
-
-\item{dim}{Set dimension of vertex embeddings. Default is 100}
-
-\item{order}{The type of model we want, 1 for first order, 2 for second order. Default
-is 2}
-
-\item{negative}{Number of negative samples. Default is 5}
-
-\item{samples}{Set the number of training samples as k million. Default is 1 (million)}
-
-\item{threads}{Use how many # of threads. Default is 1}
-
-\item{rho}{Set the start learning rate. default is 0.025}
-}
-\value{
-a numeric matrix of order 1 or 2. Input two numeric matrixes of different order
-into concatenate to get a fully represented graph embedding. 
-This embedded graph has row names as vertices. Each row is a set of weights describing the
-row name/feature/vertice.
+\item{input_matrix}{numeric matrix that will be normalized.}
 }
 \description{
-This function concatenates two graph embeddings represented as numeric matrixes of differnet
-orders. It takes two numeric matrixes returned by line after calling line with the same input
-but different order (1 and 2). It returns a combined graph embedding represented as a numeric
-matrix with row names representing the vertice. Each row is a weight of the row name/feature/
-vertice.
+This function normalizes each row vector with the formula row = row / || row ||.
 }
 \details{
-to speed up the runtime. The results are not deterministic if you run this algorithm 
-for more than one thread. Another important parameter is that you can train the line algorithm
-on two orders, one and two which return different numeric matrices for the same graph input.
-This function returns a reduced graph represented in the form of a numeric matrix.
-This numeric matrix has row names describing the vertices with each vertice  
-This reconstructed graph can be passed into line to run the main line algorithm for 
-graph embedding
+This function normalizes each row vector with the formula row = row / || row ||. This website
+\url{https://www.khanacademy.org/computing/computer-programming/programming-natural-simulations/programming-vectors/a/vector-magnitude-normalization} is a good explanation of this normalization.
 }
 \examples{
 u <- c("good", "the", "bad")
