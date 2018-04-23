@@ -18,7 +18,7 @@ represents a weighted edge in the graph.}
 \item{binary}{Save the learnt embeddings in binary moded; This should always be 0
 because R cannot represent binary formats}
 
-\item{dim}{Set dimension of vertex embeddings. Default is 100}
+\item{dim}{Set dimension of vertex embeddings. Default is 5}
 
 \item{order}{The type of model we want, 1 for first order, 2 for second order. Default
 is 2}

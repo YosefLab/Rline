@@ -4,6 +4,7 @@ devtools::load_all() # This assumes that we are running in the folder where call
 library(optparse)
 
 main <- function() {
+  set.seed(1)
   option_list <- list(
     make_option(c("-c", "--command"), type = "character", default = NULL, 
 		help = "enter command among line, reconstruct, normalize, or concatenate"),  
@@ -17,7 +18,7 @@ main <- function() {
                 help = "max_k parameter", metavar = "number"),
     make_option(c("-b", "--binary"), type = "integer", default = 0, 
                 help = "binary format 0 or 1 (no or yes)", metavar = "number"),
-    make_option(c("-di", "--dim"), type = "integer", default = 100, 
+    make_option(c("-di", "--dim"), type = "integer", default = 5, 
                 help = "dimensions", metavar = "number"),
     make_option(c("-or", "--order"), type = "integer", default = 2, 
                 help = "order 1 or 2 in line", metavar = "number"),
@@ -58,7 +59,8 @@ main <- function() {
     line_matrix <- line(df = input_df, binary = options$binary, dim = options$dim, order = options$order, negative = options$negative, samples = options$samples, rho = options$rho, threads = options$threads)
     feature_names <- row.names(line_matrix)
     cat(sprintf("Binary: %d\nDimensions %d\nOrder %d\nNegative %d\nSamples %d\nRho %f\nThreads %d\n", 	    options$binary, options$dim, options$order, options$negative, options$samples, options$rho, options$threads))
-    
+    print(input_df)
+     
     fout <- file(options$output_file, "w")
     cat(sprintf("%d %d\n", nrow(line_matrix), ncol(line_matrix)), file = fout)
     for(j in 1:nrow(line_matrix)) {

@@ -84,7 +84,7 @@ reconstruct <- function(df, max_depth = 1, max_k = 0) {
 #' represents a weighted edge in the graph.
 #' @param binary Save the learnt embeddings in binary moded; This should always be 0
 #'  because R cannot represent binary formats
-#' @param dim Set dimension of vertex embeddings. Default is 100
+#' @param dim Set dimension of vertex embeddings. Default is 5
 #' @param order The type of model we want, 1 for first order, 2 for second order. Default
 #' is 2
 #' @param negative Number of negative samples. Default is 5

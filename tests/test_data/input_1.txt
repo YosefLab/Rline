@@ -1,0 +1,6 @@
+good the 3
+the good 3
+good bad 1
+bad good 1
+bad of 4
+of bad 4
