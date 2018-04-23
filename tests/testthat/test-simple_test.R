@@ -40,3 +40,41 @@ test_that("simple line works", {
    expect_equal(line_matrix, expected_matrix, tolerance = 1e-5, scale = 1)
 
 })
+
+test_that("simple concatenate works", {
+   input_file_1 <- "../test_data/line_1_1.txt"
+   input_file_2 <- "../test_data/line_2_1.txt"
+   input_one_df <- read.table(input_file_1, skip = 1)
+   input_two_df <- read.table(input_file_2, skip = 1)
+   input_one  <- as.matrix(input_one_df[2:length(input_one_df)])
+   input_two <- as.matrix(input_two_df[2:length(input_two_df)])
+   rownames(input_one) <- input_one_df[, 1]
+   rownames(input_two) <- input_two_df[, 1]
+   concatenate_matrix <- concatenate(input_one = input_one, input_two = input_two)
+   
+   output_file <- "../test_data/concatenate_1.txt"
+   output_df <- read.table(output_file, skip = 1)
+   expected_matrix <- as.matrix(output_df[2:length(output_df)])
+   rownames(expected_matrix) <- output_df[, 1]
+   colnames(expected_matrix) <- colnames(concatenate_matrix) <- NULL  
+   
+   expect_equal(concatenate_matrix, expected_matrix, tolerance = 1e-5, scale = 1)
+  
+})
+
+
+test_that("simple normalize works", {
+  input_file <- "../test_data/concatenate_1.txt"
+  input_df <- read.table(input_file, skip = 1)
+  input_matrix <- as.matrix(input_df[2:length(input_df)])
+  rownames(input_matrix) <- input_df[, 1]
+  normalize_matrix <- normalize(input_matrix) 
+
+  output_file <- "../test_data/normalize_1.txt"
+  output_df <- read.table(output_file, skip = 1)
+  expected_matrix <- as.matrix(output_df[2:length(output_df)])
+  rownames(expected_matrix) <- output_df[, 1]
+  colnames(expected_matrix) <- colnames(normalize_matrix) <- NULL  
+    
+  expect_equal(normalize_matrix, expected_matrix, tolerance = 1e-5, scale = 1)
+})
