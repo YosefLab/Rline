@@ -38,3 +38,8 @@ Rscript caller.R --command line --input_file ./test_cases/ref_inputs/reconstruct
 Rscript caller.R --command line --input_file ./test_cases/ref_inputs/reconstruct_1.txt --output_file ./test_cases/r_outputs/line_2_1.txt --binary 0 --dim 5 --order 2 --negative 5 --samples 5 --rho 0.025 --threads 1
 Rscript caller.R --command concatenate --input_file_1 ./test_cases/ref_inputs/line_1_1.txt --input_file_2 ./test_cases/ref_inputs/line_2_1.txt --output_file ./test_cases/r_outputs/concatenate_1.txt
 Rscript caller.R --command normalize --input_file ./test_cases/ref_inputs/concatenate_1.txt --output_file ./test_cases/r_outputs/normalize_1.txt
+
+#example of line algorithm with different output formats
+Rscript caller.R --command reconstruct --input_file ./test_cases/cases/test_1.txt --output_file ./test_cases/r_outputs/reconstruct_1.txt  --max_depth 1 --max_k 0 --output_format 2
+Rscript caller.R --command reconstruct --input_file ./test_cases/cases/test_1.txt --output_file ./test_cases/r_outputs/reconstruct_1.rds  --max_depth 1 --max_k 0 --output_format 3
+
