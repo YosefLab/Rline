@@ -5,18 +5,17 @@ library(optparse)
 
 output <- function(command, output_file, output_format, data) {
     if (output_format == 2) { #write.table
- 	print(output_file
 	write.table(data, output_file, col.names = F)
-    } else if (output format == 3) { #rd
+    } else if (output_format == 3) { #rd
 	saveRDS(data, output_file)
     } else if (command == "reconstruct") {
-    	fout <- file(options$output_file, "w")
+    	fout <- file(output_file, "w")
         for(j in 1:nrow(data)) {
 	     cat(sprintf("%s\t%s\t%f", data[j, 1], data[j, 2], data[j, 3]), file = fout, sep = '\n')
 	}
 	close(fout)
     } else {
-        fout <- file(options$output_file, "w")
+        fout <- file(output_file, "w")
 	feature_names <- row.names(data)
         cat(sprintf("%d %d\n", nrow(data), ncol(data)), file = fout)
         for(j in 1:nrow(data)) {
@@ -62,13 +61,13 @@ main <- function() {
                 help = "input file1 destination", metavar = "character"),
     make_option(c("-i2", "--input_file_2"), type = "character", default = NULL, 
                 help = "input file2 destination", metavar = "character"),
-    make_options(c("-of", "--output_format"), type = "integer", default = 1, 
-		help = "output file using (1) sprintf, (2) write.table, or (3) rds")
+    make_option(c("-of", "--output_format"), type = "integer", default = 1, 
+                help = "output file using 91) sprintf, (2) write.table, or (3) rds", metavar = "number")
   ); 
   
   opt_parser <- OptionParser(option_list = option_list);
   options <- parse_args(opt_parser);
-
+  print(options$output_format)
   if (is.null(options$command)) {
       stop("Please enter a command")
   } else if (is.null(options$input_file) && is.null(options$input_file_1)) {
