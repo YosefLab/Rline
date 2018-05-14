@@ -28,5 +28,6 @@ rtsne_results <- Rtsne(X = pca_data, dims = 2, pca = FALSE)
 rtsne_data <- rtsne_results$Y
 x <- rtsne_data[,1]
 y <- rtsne_data[,2]
+postscript("tsne_graph.pdf")
 plot(x, y)
 

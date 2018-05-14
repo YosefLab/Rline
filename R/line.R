@@ -146,7 +146,7 @@ line <- function(df = NULL, binary = 0, dim = 100, order = 2, negative = 5, samp
 #' new_df <- reconstruct(df)
 #' order_1 <- line(df = new_df, binary = 0, dim = 100, order = 1, negative = 5, samples = 10, rho = 0.025, threads = 1)
 #' order_2 <- line(df = new_df, binary = 0, dim = 100, order = 2, negative = 5, samples = 10, rho = 0.025, threads = 1) 
-#' concatenate_df <- concatenate(input_one = order_1, input_two = order_2, binary = 0)
+#' concatenate_matrix <- concatenate(input_one = order_1, input_two = order_2, binary = 0)
 concatenate <- function(input_one, input_two, binary = 0) {
   return(concatenate_caller(input_one, input_two, rownames(input_one), rownames(input_two), binary))
 }
@@ -177,8 +177,8 @@ concatenate <- function(input_one, input_two, binary = 0) {
 #' new_df <- reconstruct(df)
 #' order_1 <- line(df = new_df, binary = 0, dim = 100, order = 1, negative = 5, samples = 10, rho = 0.025, threads = 1)
 #' order_2 <- line(df = new_df, binary = 0, dim = 100, order = 2, negative = 5, samples = 10, rho = 0.025, threads = 1) 
-#' concatenate_df <- concatenate(input_one = order_1, input_two = order_2, binary = 0)
-#' normalize_df <- normalize(input_matrix = normalize_df)
+#' concatenate_matrix <- concatenate(input_one = order_1, input_two = order_2, binary = 0)
+#' normalize_matrix <- normalize(input_matrix = normalize_df)
 normalize <- function(input_matrix) {
   return(input_matrix / sqrt(rowSums(input_matrix * input_matrix)))
 }
