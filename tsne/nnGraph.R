@@ -94,9 +94,9 @@ combine <- function(matrix_one, matrix_two) {
 #Like with tSNE, scale the columns and log transform
 data <- readMM("matrix.mtx")
 row_table <- read.table("genes.tsv")
-row_names <- as.vector(levels(row_table[,1]))
+row_names <- row_table[,1]
 col_table <- read.table("barcodes.tsv")
-col_names <- as.vector(levels(col_table[,1]))
+col_names <- col_table[,1]
 rownames(data) <- row_names
 colnames(data) <- col_names
 data <- t(t(data)/colSums(data))
