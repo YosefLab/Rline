@@ -31,3 +31,8 @@ y <- rtsne_data[,2]
 pdf("tsne_graph.pdf")
 plot(x, y)
 
+library(ggplot2)
+ggplot() + aes(x=rtsne_data[, 1],
+               y=rtsne_data[, 2],
+               color=data[, 'ENSG00000170458']) +
+           geom_point()

@@ -149,4 +149,29 @@ y <- normalize_matrix[, 2]
 plot(x, y)
 #cmd line
 #postscript("rline.pdf")
-#plot(x, y)
+#plot(x, y)# TYrying in 2d
+line_one_matrix <- line(reconstruct_df, dim = 2, order = 1, negative = 5,
+                        samples = 50, rho = 0.05)
+line_two_matrix <- line(reconstruct_df, dim = 2, order = 2, negative = 5,
+                        samples = 50, rho = 0.05)
+
+plot(line_one_matrix[, 1], line_one_matrix[, 2])
+
+gene_name = 'CD4'
+a <- row_table[row_table$V2 == gene_name, ]
+
+library(ggplot2)
+ggplot() + aes(x=line_one_matrix[, 1],
+               y=line_one_matrix[, 2],
+               #color=data[, 'ENSG00000170458']) +
+               color=data[, 'ENSG00000010610']) +
+           geom_point()
+
+ggplot() + aes(x=line_one_matrix[, 1],
+               y=line_one_matrix[, 2],
+               color=data[, 'ENSG00000170458']) +
+           geom_density2d()
+
+ggplot() + aes(x=line_one_matrix[, 1],
+               y=data[, 'ENSG00000170458']) +
+           geom_point()
