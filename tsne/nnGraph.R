@@ -130,14 +130,15 @@ edge_list_df <- create_edge_list(adjacency_list, weights)
 #' concatenate_matrix <- concatenate(input_one = order_1, input_two = order_2, binary = 0)
 #' #Rline
 reconstruct_df <- reconstruct(edge_list_df, max_depth = 2, max_k = 10)
-print(head(reconstruct_df))
-line_one_matrix <- line(reconstruct_df, dim = 1, order = 1, negative = 10, samples = 100, rho = 0.05)
-line_two_matrix <- line(reconstruct_df, dim = 1, order = 2, negative = 10, samples = 100, rho = 0.05)
-print(head(line_two_matrix))
+line_two_matrix <- line(reconstruct_df, dim = 1, order = 2, negative = 5, samples = 50, rho = 0.05)
+line_one_matrix <- line(reconstruct_df, dim = 1, order = 1, negative = 5, samples = 50, rho = 0.05)
 concatenate_matrix <- concatenate(line_one_matrix, line_two_matrix)
-print(head(concatenate_matrix))
 normalize_matrix <- normalize(concatenate_matrix)
 x <- normalize_matrix[, 1]
 y <- normalize_matrix[, 2]
-postscript("rline.pdf")
+#rstudio
+print.eval = TRUE
 plot(x, y)
+#cmd line
+#postscript("rline.pdf")
+#plot(x, y)
