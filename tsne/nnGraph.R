@@ -66,6 +66,10 @@ fast_pca <- function(data, k){
 }
 
 
+create_edge_list <- function(adjacency_matrix, weights) {
+	return(adjacency_matrix)	
+}
+
 #reading in data and preprocessing with pca
 # Like with tSNE, scale the columns and log transform
 data <- readMM("matrix.mtx")
@@ -99,6 +103,7 @@ idx <- out$idx
 weights <- out$weights
 print(head(idx))
 print(head(weights))
+print(dim(idx))
 df <- create_edge_list(idx, weights)
 
 #Rline
