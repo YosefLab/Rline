@@ -46,3 +46,6 @@ reconstruct_vector
 # Test case results
 test_cases/r_outputs/*
 test_cases/ref_outputs/*
+
+# Misc
+misc/*
