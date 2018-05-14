@@ -45,6 +45,7 @@
 #' reconstruct(df, max_depth = 2)
 #' reconstruct(df, max_depth = 2, max_k = 2)
 reconstruct <- function(df, max_depth = 1, max_k = 0) {
+  print(max_depth)
   return(reconstruct_caller(as.character(df[, 1]), as.character(df[, 2]), as.numeric(df[, 3]), max_depth, max_k))
 }
 
@@ -178,7 +179,7 @@ concatenate <- function(input_one, input_two, binary = 0) {
 #' order_1 <- line(df = new_df, binary = 0, dim = 100, order = 1, negative = 5, samples = 10, rho = 0.025, threads = 1)
 #' order_2 <- line(df = new_df, binary = 0, dim = 100, order = 2, negative = 5, samples = 10, rho = 0.025, threads = 1) 
 #' concatenate_matrix <- concatenate(input_one = order_1, input_two = order_2, binary = 0)
-#' normalize_matrix <- normalize(input_matrix = normalize_df)
+#' normalize_matrix <- normalize(input_matrix = concatenate_matrix)
 normalize <- function(input_matrix) {
   return(input_matrix / sqrt(rowSums(input_matrix * input_matrix)))
 }

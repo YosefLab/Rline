@@ -2,6 +2,8 @@ library(RANN)
 library(matrixStats)
 library(Matrix)
 library(rsvd)
+library(devtools)
+devtools::load_all()
 
 #' Compute weights for neighbors
 #'
@@ -66,12 +68,23 @@ fast_pca <- function(data, k){
 }
 
 
-create_edge_list <- function(adjacency_matrix, weights) {
-	return(adjacency_matrix)	
+create_edge_list <- function(adjacency_list, weights) {
+  edge_list <- matrix(ncol = ncol(adjacency_list) * nrow(adjacency_list), nrow = 3)
+  col_index = 1
+  for (j in 1:ncol(adjacency_list)) {
+    for (i in 1:nrow(adjacency_list)) {
+      edge_list[1, col_index] = i
+      edge_list[2, col_index] = adjacency_list[i, j]
+      edge_list[3, col_index] = weights[i, j]
+      col_index = col_index + 1
+    }
+  }
+  edge_list <- t(edge_list)
+  return(as.data.frame(edge_list))
 }
 
 #reading in data and preprocessing with pca
-# Like with tSNE, scale the columns and log transform
+#Like with tSNE, scale the columns and log transform
 data <- readMM("matrix.mtx")
 row_table <- read.table("genes.tsv")
 row_names <- as.vector(levels(row_table[,1]))
@@ -87,7 +100,6 @@ data <- data[genes_to_keep, ]
 data <- t(data)
 pca_data <- fast_pca(data, 30)
 
-
 # nearest neighbors 
 # idx and weights are both N_CELLS by N_NEIGHBORS
 # they describe a weighted graph
@@ -97,28 +109,35 @@ pca_data <- fast_pca(data, 30)
 # [3, 10, 20, 5]
 # and row 7 of weights is:
 # [.5, .3, .02, .7]
-#out <- neighborsAndWeights(data, n_neighbors = 30)
-out <- neighborsAndWeights(pca_data, n_neighbors = 30)
-idx <- out$idx
-weights <- out$weights
-print(head(idx))
-print(head(weights))
-print(dim(idx))
-df <- create_edge_list(idx, weights)
-
-#Rline
-reconstruct_df <- reconstruct(df)
-line_one <- line(reconstruct_df, dim = 2, order = 1)
-line_two <- line(reconstruct_df, dim = 2, order = 2)
-concatenate_matrix <- concatenate(line_one, line_two)
-normalize_matrix <- normalize(concatenate_matrix)
-print(dim(normalize_matrix))
-x <- normalize_matrix[,1]
-y <- normalize_matrix[,2]
-plot(x, y)
-
 # then the corresponding edges are:
 # 7 -> 3, weight .5
 # 7 -> 10, weight .3
 # 7 -> 20, weight .02
 # 7 -> 5, weight .7
+out <- neighborsAndWeights(pca_data, n_neighbors = 30)
+adjacency_list <- out$neighbors
+weights <- out$weights
+edge_list_df <- create_edge_list(adjacency_list, weights)
+
+#' df <- data.frame(u, v, w)
+#' new_df <- reconstruct(df)
+#' order_1 <- line(df = new_df, binary = 0, dim = 100, order = 1, negative = 10, samples = 100, rho = 0.025, threads = 1)
+#' order_2 <- line(df = new_df, binary = 0, dim = 100, order = 2, negative = 10, samples = 100, rho = 0.025, threads = 1) 
+#' concatenate_matrix <- concatenate(input_one = order_1, input_two = order_2, binary = 0)
+#' normalize_matrix <- normalize(input_matrix = normalize_df)
+#reconstruct_df <- reconstruct(edge_list_df, max_depth = 2, max_k = 5)
+#' order_2 <- line(df = new_df, binary = 0, dim = 100, order = 2, negative = 10, samples = 100, rho = 0.025, threads = 1) 
+#' concatenate_matrix <- concatenate(input_one = order_1, input_two = order_2, binary = 0)
+#' #Rline
+reconstruct_df <- reconstruct(edge_list_df, max_depth = 2, max_k = 10)
+print(head(reconstruct_df))
+line_one_matrix <- line(reconstruct_df, dim = 1, order = 1, negative = 10, samples = 100, rho = 0.05)
+line_two_matrix <- line(reconstruct_df, dim = 1, order = 2, negative = 10, samples = 100, rho = 0.05)
+print(head(line_two_matrix))
+concatenate_matrix <- concatenate(line_one_matrix, line_two_matrix)
+print(head(concatenate_matrix))
+normalize_matrix <- normalize(concatenate_matrix)
+x <- normalize_matrix[, 1]
+y <- normalize_matrix[, 2]
+postscript("rline.pdf")
+plot(x, y)
