@@ -4,7 +4,7 @@ library("Rtsne")
 
 fast_pca <- function(data, k){
     data_scaled <- scale(data, center = TRUE, scale = FALSE)
-    out <- rsvd::rsvd(data_scaled, k = 5)
+    out <- rsvd::rsvd(data_scaled, k = k)
     result <- data_scaled %*% out$v
     return(result)
 }
