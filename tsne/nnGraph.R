@@ -83,6 +83,13 @@ create_edge_list <- function(adjacency_list, weights) {
   return(as.data.frame(edge_list))
 }
 
+combine <- function(matrix_one, matrix_two) {
+  matrix_one <- matrix_one[order(matrix_one[, 1], decreasing = FALSE), ]
+  matrix_two <- matrix_two[order(matrix_two[, 1], decreasing = FALSE), ]
+  return(cbind(matrix_one, matrix_two))
+  #return(merge(matrix_one, matrix_two, by = "", all = TRUE))
+}
+
 #reading in data and preprocessing with pca
 #Like with tSNE, scale the columns and log transform
 data <- readMM("matrix.mtx")
@@ -130,14 +137,15 @@ edge_list_df <- create_edge_list(adjacency_list, weights)
 #' concatenate_matrix <- concatenate(input_one = order_1, input_two = order_2, binary = 0)
 #' #Rline
 reconstruct_df <- reconstruct(edge_list_df, max_depth = 2, max_k = 10)
-line_two_matrix <- line(reconstruct_df, dim = 1, order = 2, negative = 5, samples = 50, rho = 0.05)
 line_one_matrix <- line(reconstruct_df, dim = 1, order = 1, negative = 5, samples = 50, rho = 0.05)
-concatenate_matrix <- concatenate(line_one_matrix, line_two_matrix)
+line_two_matrix <- line(reconstruct_df, dim = 1, order = 2, negative = 5, samples = 50, rho = 0.05)
+#concatenate_matrix <- concatenate(line_one_matrix, line_two_matrix)
+concatenate_matrix <- combine(line_one_matrix, line_two_matrix)
+print.eval = TRUE
 normalize_matrix <- normalize(concatenate_matrix)
 x <- normalize_matrix[, 1]
 y <- normalize_matrix[, 2]
 #rstudio
-print.eval = TRUE
 plot(x, y)
 #cmd line
 #postscript("rline.pdf")
