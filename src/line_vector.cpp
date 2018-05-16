@@ -383,6 +383,7 @@ void TrainLINEMain(const std::vector<std::string> &input_u, const std::vector<st
 	total_samples = total_samples_param;
 	init_rho = init_rho_param;
 	num_threads = num_threads_param;
+	current_sample_count = 0;
 
 	total_samples *= 1000000;
 	rho = init_rho;

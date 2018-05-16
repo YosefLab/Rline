@@ -62,7 +62,7 @@ neighborsAndWeights <- function(data, n_neighbors=30, neighborhood_factor=3){
 
 fast_pca <- function(data, k){
     data_scaled <- scale(data, center = TRUE, scale = FALSE)
-    out <- rsvd::rsvd(data_scaled, k = k)
+    out <- rsvd::rsvd(data_scaled, k = 5)
     result <- data_scaled %*% out$v
     return(result)
 }
@@ -84,9 +84,8 @@ create_edge_list <- function(adjacency_list, weights) {
 }
 
 combine <- function(matrix_one, matrix_two) {
-  matrix_one <- matrix_one[order(matrix_one[, 1], decreasing = FALSE), ]
-  matrix_two <- matrix_two[order(matrix_two[, 1], decreasing = FALSE), ]
-  return(cbind(matrix_one, matrix_two))
+  #return cbind(matrix_one[order(matrix_one[, 1])], matrix_two[order(matrix_two[, 1])]
+  #return(cbind(ma)
   #return(merge(matrix_one, matrix_two, by = "", all = TRUE))
 }
 
@@ -94,9 +93,9 @@ combine <- function(matrix_one, matrix_two) {
 #Like with tSNE, scale the columns and log transform
 data <- readMM("matrix.mtx")
 row_table <- read.table("genes.tsv")
-row_names <- row_table[,1]
+row_names <- as.vector(levels(row_table[,1]))
 col_table <- read.table("barcodes.tsv")
-col_names <- col_table[,1]
+col_names <- as.vector(levels(col_table[,1]))
 rownames(data) <- row_names
 colnames(data) <- col_names
 data <- t(t(data)/colSums(data))
@@ -139,9 +138,8 @@ edge_list_df <- create_edge_list(adjacency_list, weights)
 reconstruct_df <- reconstruct(edge_list_df, max_depth = 2, max_k = 10)
 line_one_matrix <- line(reconstruct_df, dim = 1, order = 1, negative = 5, samples = 50, rho = 0.05)
 line_two_matrix <- line(reconstruct_df, dim = 1, order = 2, negative = 5, samples = 50, rho = 0.05)
-#concatenate_matrix <- concatenate(line_one_matrix, line_two_matrix)
-concatenate_matrix <- combine(line_one_matrix, line_two_matrix)
-print.eval = TRUE
+concatenate_matrix <- concatenate(line_one_matrix, line_two_matrix)
+#concatenate_matrix <- combine(line_one_matrix, line_two_matrix)
 normalize_matrix <- normalize(concatenate_matrix)
 x <- normalize_matrix[, 1]
 y <- normalize_matrix[, 2]
@@ -149,29 +147,4 @@ y <- normalize_matrix[, 2]
 plot(x, y)
 #cmd line
 #postscript("rline.pdf")
-#plot(x, y)# TYrying in 2d
-line_one_matrix <- line(reconstruct_df, dim = 2, order = 1, negative = 5,
-                        samples = 50, rho = 0.05)
-line_two_matrix <- line(reconstruct_df, dim = 2, order = 2, negative = 5,
-                        samples = 50, rho = 0.05)
-
-plot(line_one_matrix[, 1], line_one_matrix[, 2])
-
-gene_name = 'CD4'
-a <- row_table[row_table$V2 == gene_name, ]
-
-library(ggplot2)
-ggplot() + aes(x=line_one_matrix[, 1],
-               y=line_one_matrix[, 2],
-               #color=data[, 'ENSG00000170458']) +
-               color=data[, 'ENSG00000010610']) +
-           geom_point()
-
-ggplot() + aes(x=line_one_matrix[, 1],
-               y=line_one_matrix[, 2],
-               color=data[, 'ENSG00000170458']) +
-           geom_density2d()
-
-ggplot() + aes(x=line_one_matrix[, 1],
-               y=data[, 'ENSG00000170458']) +
-           geom_point()
+#plot(x, y)
