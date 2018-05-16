@@ -1,0 +1,21 @@
+done 5, samples 10, max_k 10, depth = 2
+learning rate = 0.3 -> 0.1 -> 0.03 -> 0.01 
+learning rate should be 0.025
+done 10, samples 10, max_k 10, depth = 2
+trying 10, samples 30, max_k 10, depth = 2
+trying 10, samples 100,  max_k 100, negative 10, depth = 2
+done 50 pca, samples 10, max_k 10, 
+trying 50 pca, samples 10, max_k 30, negative 10
+trying 50 pca, samples 10, max_k 100, negative 10, depth = 5
+trying 100, samples 10, max_k 10, negative = 3, depth = 3)
+trying 100, samples 10,  max_k 100, negative 10, depth = 10
+4:00
+so try it without reconstruct try with pca 200 -> line 10 and tsne 
+
+what seems to work
+depth = 3, max_k = 100, samples 100, negative = 10
+no reconstruct
+dim = 2, order = 1, negative = 5, samples = 30, rho = 0.025
+
+dont judge 0.025 rho
+
