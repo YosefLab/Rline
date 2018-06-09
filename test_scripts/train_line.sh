@@ -33,7 +33,7 @@ echo "threads = $threads"
 for i in `seq 1 $test_cases`
 do
 	echo "Training Vector Line Case $i:"
-	cmd="Rscript ../caller.R --command line --input_file ../test_cases/ref_inputs/reconstruct_$i.txt --output_file ../test_cases/r_outputs/line_$i.txt --binary $binary --dim $dim --order $order --negative $num_negative --samples $samples --rho $rho --threads $threads --output_format 2"
+	cmd="Rscript ../caller.R --command line --input_file ../test_cases/ref_inputs/reconstruct_$i.txt --output_file ../test_cases/r_outputs/line_$i.txt --binary $binary --dim $dim --order $order --negative $num_negative --samples $samples --rho $rho --threads $threads --output_format 1"
 	eval $cmd
 done
 
