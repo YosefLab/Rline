@@ -22,10 +22,10 @@ rline <- function(edge_list_df, depth = 2, max_k = 10, neg = 5, samples = 10, rh
 
 graph <- function(name, input_matrix) {
 	output_dir = "plots/"
-	plot <- ggplot() + aes(x  = input_matrix[, 1], y = input_matrix[, 2]) + geom_point()
-        ggsave(filename = paste(output_dir, paste(name, "scatter_plot.pdf", sep = "_"), sep = ""), plot = plot, dpi = 100) + labs(x = "x", y = "y")
-	plot <- ggplot() + aes(x = input_matrix[, 1], y = input_matrix[, 2]) + geom_density2d()
-	ggsave(filename = paste(output_dir, paste(name, "probability_density_plot.pdf", sep = "_"), sep = ""), plot = plot, dpi = 600) + labs(x = "x", y = "y")
+	plot <- ggplot() + aes(x  = input_matrix[, 1], y = input_matrix[, 2]) + geom_point() + labs(x = "x", y = "y")
+    ggsave(filename = paste(name, "scatter_plot.pdf", sep = "_"), device = "pdf", plot = plot, path = output_dir, dpi = 100)
+	plot <- ggplot() + aes(x = input_matrix[, 1], y = input_matrix[, 2]) + geom_density2d() + labs(x = "x", y = "y")
+	ggsave(filename = paste(name, "probability_density_plot.pdf", sep = "_"), device = "pdf", plot = plot, path = output_dir, dpi = 600)
 }
 
 input_dir = "inputs/"
