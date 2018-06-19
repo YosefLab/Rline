@@ -1,0 +1,3 @@
+1) remember to delete first line of all output files
+2)if possible then run large outputs for deep walk for p2p
+2) run rline outputs
