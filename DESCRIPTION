@@ -5,13 +5,13 @@ Author: c(
     person("Charles", "Tang", email = "j316chuck@berkeley.edu", role = c("aut", "cre")), 
     person("David", "Detomasa", email = "david.detomaso@berkeley.edu", role = c("aut")))
 Maintainer: Charles Tang <chuck.tang98@gmail.com> 
-Description: R wrappers for the line graph-embedding algorithm 
+Description: R wrapper functions written around the LINE graph-embedding algorithm. 
 Depends: R (>= 3.4.0)
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 Imports: Rcpp (>= 0.12.0)
 LinkingTo: Rcpp
 LazyData: true
 RoxygenNote: 6.0.1
-Suggests: 
+Suggests:
     testthat
