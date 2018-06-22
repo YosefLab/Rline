@@ -36,6 +36,8 @@
 #' @references 
 #'  \url{https://arxiv.org/abs/1503.03578}
 #'   
+#' @export 
+#' 
 #' @examples
 #' u <- c("good", "the", "bad")
 #' v <- c("the", "good", "the")
@@ -101,6 +103,8 @@ reconstruct <- function(df, max_depth = 1, max_k = 0) {
 #'  \url{https://github.com/tangjianpku/LINE}
 #' @references 
 #'  \url{https://arxiv.org/abs/1503.03578}
+#' 
+#' @export
 #'   
 #' @examples
 #' u <- c("good", "the", "bad")
@@ -108,8 +112,10 @@ reconstruct <- function(df, max_depth = 1, max_k = 0) {
 #' w <- 1:3
 #' df <- data.frame(u, v, w)
 #' new_df <- reconstruct(df)
-#' order_1 <- line(df = new_df, binary = 0, dim = 100, order = 1, negative = 5, samples = 10, rho = 0.025, threads = 1)
-#' order_2 <- line(df = new_df, binary = 0, dim = 100, order = 2, negative = 5, samples = 10, rho = 0.025, threads = 1) 
+#' order_1 <- line(df = new_df, binary = 0, dim = 100, 
+#'          order = 1, negative = 5, samples = 10, rho = 0.025, threads = 1)
+#' order_2 <- line(df = new_df, binary = 0, dim = 100,
+#'          order = 2, negative = 5, samples = 10, rho = 0.025, threads = 1) 
 line <- function(df = NULL, binary = 0, dim = 100, order = 2, negative = 5, samples = 1, rho = 0.025, threads = 1) {
   return(line_caller(as.character(df[, 1]), as.character(df[, 2]), as.numeric(df[, 3]), binary, dim, order, negative, samples, rho, threads))
 }
@@ -138,6 +144,8 @@ line <- function(df = NULL, binary = 0, dim = 100, order = 2, negative = 5, samp
 #'  \url{https://github.com/tangjianpku/LINE}
 #' @references 
 #'  \url{https://arxiv.org/abs/1503.03578}
+#'
+#' @export
 #'   
 #' @examples
 #' u <- c("good", "the", "bad")
@@ -145,9 +153,12 @@ line <- function(df = NULL, binary = 0, dim = 100, order = 2, negative = 5, samp
 #' w <- 1:3
 #' df <- data.frame(u, v, w)
 #' new_df <- reconstruct(df)
-#' order_1 <- line(df = new_df, binary = 0, dim = 100, order = 1, negative = 5, samples = 10, rho = 0.025, threads = 1)
-#' order_2 <- line(df = new_df, binary = 0, dim = 100, order = 2, negative = 5, samples = 10, rho = 0.025, threads = 1) 
-#' concatenate_matrix <- concatenate(input_one = order_1, input_two = order_2, binary = 0)
+#' order_1 <- line(df = new_df, binary = 0, dim = 10,
+#'          order = 1, negative = 5, samples = 10, rho = 0.025, threads = 1)
+#' order_2 <- line(df = new_df, binary = 0, dim = 10, 
+#'          order = 2, negative = 5, samples = 10, rho = 0.025, threads = 1) 
+#' concatenate_matrix <- concatenate(input_one = order_1, 
+#'                                  input_two = order_2, binary = 0)
 concatenate <- function(input_one, input_two, binary = 0) {
   return(concatenate_caller(input_one, input_two, rownames(input_one), rownames(input_two), binary))
 }
@@ -169,6 +180,8 @@ concatenate <- function(input_one, input_two, binary = 0) {
 #'  \url{https://github.com/tangjianpku/LINE}
 #' @references 
 #'  \url{https://arxiv.org/abs/1503.03578}
+#'
+#' @export
 #'   
 #' @examples
 #' u <- c("good", "the", "bad")

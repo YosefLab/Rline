@@ -1,10 +1,10 @@
 Package: rline
 Title: R wrappers for the line graph-embedding algorithm
 Version: 0.0.1
-Authors@R: c(
+Author: c(
     person("Charles", "Tang", email = "j316chuck@berkeley.edu", role = c("aut", "cre")), 
     person("David", "Detomasa", email = "david.detomaso@berkeley.edu", role = c("aut")))
-Mainter: Charles Tang <chuck.tang98@gmail.com> 
+Maintainer: Charles Tang <chuck.tang98@gmail.com> 
 Description: R wrappers for the line graph-embedding algorithm 
 Depends: R (>= 3.4.0)
 License: MIT
