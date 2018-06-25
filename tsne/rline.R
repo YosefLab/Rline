@@ -4,20 +4,27 @@ library(Matrix)
 library(rsvd)
 library(devtools)
 library(ggplot2)
+library(Rtsne)
 devtools::load_all()
 
 rline <- function(edge_list_df, depth = 2, max_k = 10, neg = 5, samples = 10, rho = 0.025, name = "50") {
 	reconstruct_df <- reconstruct(edge_list_df, max_depth = depth, max_k = max_k)
-	line_one_matrix <- line(reconstruct_df, dim = 2, order = 1, negative = neg, samples = samples, rho = rho)
-	graph("line_one", line_one_matrix)
-	line_two_matrix <- line(reconstruct_df, dim = 2, order = 2, negative = neg, samples = samples, rho = rho)
-	graph("line_two", line_two_matrix)
+	line_one_matrix <- line(reconstruct_df, dim = 10, order = 1, negative = neg, samples = samples, rho = rho)
+	tsne_results <- Rtsne(X = line_one_matrix, dims = 2, pca = FALSE)
+    tsne_matrix <- tsne_results$Y
+    graph("line_one", tsne_matrix)
+	line_two_matrix <- line(reconstruct_df, dim = 10, order = 2, negative = neg, samples = samples, rho = rho)
+	tsne_results <- Rtsne(X = line_two_matrix, dims = 2, pca = FALSE)
+    tsne_matrix <- tsne_results$Y
+    graph("line_two", tsne_matrix)
 	
-	line_one_matrix <- line(reconstruct_df, dim = 1, order = 1, negative = neg, samples = samples, rho = rho)
-	line_two_matrix <- line(reconstruct_df, dim = 1, order = 2, negative = neg, samples = samples, rho = rho)
+	line_one_matrix <- line(reconstruct_df, dim = 5, order = 1, negative = neg, samples = samples, rho = rho)
+	line_two_matrix <- line(reconstruct_df, dim = 5, order = 2, negative = neg, samples = samples, rho = rho)
 	concatenate_matrix <- concatenate(line_one_matrix, line_two_matrix)
 	normalize_matrix <- normalize(concatenate_matrix)
-	graph("concatenate", normalize_matrix)		
+    tsne_results <- Rtsne(X = normalize_matrix, dims = 2, pca = FALSE)
+	tsne_matrix <- tsne_results$Y
+    graph("concatenate", tsne_matrix)		
 }
 
 graph <- function(name, input_matrix) {
