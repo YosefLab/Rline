@@ -55,6 +55,7 @@ static double *prob;
 static const gsl_rng_type * gsl_T;
 static gsl_rng * gsl_r;
 
+
 /* Build a hash table, mapping each vertex name to a unique vertex id */
 static unsigned int Hash(char *key)
 {
@@ -117,7 +118,7 @@ static void InitAliasTable()
 	prob = (double *)malloc(num_edges*sizeof(double));
 	if (alias == NULL || prob == NULL)
 	{
-		printf("Error: memory allocation failed!\n");
+		//printf("Error: memory allocation failed!\n");
 		exit(1);
 	}
 
@@ -126,7 +127,7 @@ static void InitAliasTable()
 	long long *small_block = (long long*)malloc(num_edges*sizeof(long long));
 	if (norm_prob == NULL || large_block == NULL || small_block == NULL)
 	{
-		printf("Error: memory allocation failed!\n");
+		//printf("Error: memory allocation failed!\n");
 		exit(1);
 	}
 
@@ -179,12 +180,12 @@ static void InitVector()
 	long long a, b;
 
 	a = posix_memalign((void **)&emb_vertex, 128, (long long)num_vertices * dim * sizeof(real));
-	if (emb_vertex == NULL) { printf("Error: memory allocation failed\n"); exit(1); }
+	if (emb_vertex == NULL) { exit(1); } //printf("Error: memory allocation failed\n"); exit(1); }
 	for (b = 0; b < dim; b++) for (a = 0; a < num_vertices; a++)
 		emb_vertex[a * dim + b] = (rand() / (real)RAND_MAX - 0.5) / dim;
 
 	a = posix_memalign((void **)&emb_context, 128, (long long)num_vertices * dim * sizeof(real));
-	if (emb_context == NULL) { printf("Error: memory allocation failed\n"); exit(1); }
+	if (emb_context == NULL) { exit(1); }//{ printf("Error: memory allocation failed\n"); exit(1); }
 	for (b = 0; b < dim; b++) for (a = 0; a < num_vertices; a++)
 		emb_context[a * dim + b] = 0;
 }
@@ -261,8 +262,8 @@ static void *TrainLINEThread(void *id)
 		{
 			current_sample_count += count - last_count;
 			last_count = count;
-			printf("%cRho: %f  Progress: %.3lf%%", 13, rho, (real)current_sample_count / (real)(total_samples + 1) * 100);
-			fflush(stdout);
+			//printf("%cRho: %f  Progress: %.3lf%%", 13, rho, (real)current_sample_count / (real)(total_samples + 1) * 100);
+			//fflush(stdout);
 			rho = init_rho * (1 - current_sample_count / (real)(total_samples + 1));
 			if (rho < init_rho * 0.0001) rho = init_rho * 0.0001;
 		}
@@ -307,14 +308,14 @@ static void VectorReadData(const std::vector<std::string> &input_u, const std::v
 	double weight;
 
 	num_edges = (long long) input_u.size();
-	printf("Number of edges: %lld          \n", num_edges);
+	//printf("Number of edges: %lld          \n", num_edges);
 
 	edge_source_id = (int *)malloc(num_edges*sizeof(int));
 	edge_target_id = (int *)malloc(num_edges*sizeof(int));
 	edge_weight = (double *)malloc(num_edges*sizeof(double));
 	if (edge_source_id == NULL || edge_target_id == NULL || edge_weight == NULL)
 	{
-		printf("Error: memory allocation failed!\n");
+		//printf("Error: memory allocation failed!\n");
 		exit(1);
 	}
 
@@ -325,11 +326,11 @@ static void VectorReadData(const std::vector<std::string> &input_u, const std::v
 		strcpy(name_v2, input_v[k].c_str());
 		weight = input_w[k];
 
-		if (k % 10000 == 0)
+		/*if (k % 10000 == 0)
 		{
 			printf("Reading edges: %.3lf%%%c", k / (double)(num_edges + 1) * 100, 13);
 			fflush(stdout);
-		}
+		}*/
 
 		vid = SearchHashTable(name_v1);
 		if (vid == -1) vid = AddVertex(name_v1);
@@ -343,7 +344,7 @@ static void VectorReadData(const std::vector<std::string> &input_u, const std::v
 
 		edge_weight[k] = weight;
 	}
-	printf("Number of vertices: %d          \n", num_vertices);
+	//printf("Number of vertices: %d          \n", num_vertices);
 }
 
 static void VectorOutput(std::vector<std::string> &output_vertices, std::vector< std::vector<double> > &output_vectors)
@@ -358,7 +359,7 @@ static void VectorOutput(std::vector<std::string> &output_vertices, std::vector<
 		output_vectors.push_back(vec);
 	}
 }
-
+/*
 static void OutputVectors(std::vector<std::string> &output_vertices, std::vector< std::vector<double> > &output_vectors)
 {
 	FILE *fo = fopen(embedding_file, "wb");
@@ -372,7 +373,7 @@ static void OutputVectors(std::vector<std::string> &output_vertices, std::vector
 	}
 	fclose(fo);
 }
-
+*/
 
 void TrainLINEMain(const std::vector<std::string> &input_u, const std::vector<std::string> &input_v, const std::vector<double> &input_w, std::vector<std::string> &output_vertices, std::vector< std::vector<double> > &output_vectors,
 				  int is_binary_param, int dim_param, int order_param, int num_negative_param, int total_samples_param, float init_rho_param, int num_threads_param) {
@@ -391,7 +392,7 @@ void TrainLINEMain(const std::vector<std::string> &input_u, const std::vector<st
 	long a;
 	pthread_t *pt = (pthread_t *)malloc(num_threads * sizeof(pthread_t));
 
-	if (order != 1 && order != 2)
+	/*if (order != 1 && order != 2)
 	{
 		printf("Error: order should be either 1 or 2!\n");
 		exit(1);
@@ -405,7 +406,7 @@ void TrainLINEMain(const std::vector<std::string> &input_u, const std::vector<st
 	printf("Initial rho: %lf\n", init_rho);
 	printf("Threads: %d\n", num_threads);
 	printf("--------------------------------\n");
-
+    */
 	InitHashTable();
 	VectorReadData(input_u, input_v, input_w); //ReadData();
 	InitAliasTable();
@@ -419,16 +420,16 @@ void TrainLINEMain(const std::vector<std::string> &input_u, const std::vector<st
 	gsl_rng_set(gsl_r, 314159265);
 
 	clock_t start = clock();
-	printf("--------------------------------\n");
+	//printf("--------------------------------\n");
 	for (a = 0; a < num_threads; a++) pthread_create(&pt[a], NULL, TrainLINEThread, (void *)a);
 	for (a = 0; a < num_threads; a++) pthread_join(pt[a], NULL);
-	printf("\n");
+	//printf("\n");
 	clock_t finish = clock();
-	printf("Total time: %lf\n", (double)(finish - start) / CLOCKS_PER_SEC);
+	//printf("Total time: %lf\n", (double)(finish - start) / CLOCKS_PER_SEC);
 
 	VectorOutput(output_vertices, output_vectors); //Output();
 }
-
+/*
 static void ReadVectors(std::vector<std::string> &input_u, std::vector<std::string> &input_v, std::vector<double> &input_w) {
         FILE *fin;
         char name_v1[MAX_STRING], name_v2[MAX_STRING], str[2 * MAX_STRING + 10000];
@@ -466,4 +467,4 @@ static int ArgPos(char *str, int argc, char **argv) {
 		return a;
 	}
 	return -1;
-}
+}*/

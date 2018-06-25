@@ -81,7 +81,7 @@ static void ReadVectors(std::vector<std::string> &first_order_vertices, std::vec
 
 	FILE *fi = fopen(vector_file1, "rb");
 	if (fi == NULL) {
-		printf("Vector file 1 not found\n");
+		//printf("Vector file 1 not found\n");
 		exit(1);
 	}
 	fscanf(fi, "%lld %lld ", &rows, &cols);
@@ -101,7 +101,7 @@ static void ReadVectors(std::vector<std::string> &first_order_vertices, std::vec
 
 	fi = fopen(vector_file2, "rb");
 	if (fi == NULL) {
-		printf("Vector file 2 not found\n");
+		//printf("Vector file 2 not found\n");
 		exit(1);
 	}
 	fscanf(fi, "%lld %lld ", &rows, &cols);
@@ -160,9 +160,9 @@ static void InitVectors(const std::vector<std::string> &first_order_vertices, co
 		}
 	}
 
-	printf("Vocab size: %lld\n", num_vertices);
-	printf("Vector size 1: %lld\n", vector_dim1);
-	printf("Vector size 2: %lld\n", vector_dim2);	
+	//printf("Vocab size: %lld\n", num_vertices);
+	//printf("Vector size 1: %lld\n", vector_dim1);
+	//printf("Vector size 2: %lld\n", vector_dim2);	
 }
 
 
@@ -175,7 +175,7 @@ void ConcatenateMain(const std::vector<std::string> &first_order_vertices, const
 
 	InitHashTable();
 	InitVectors(first_order_vertices, second_order_vertices, first_order_features, second_order_features);
-	printf("%lld %lld\n", num_vertices, vector_dim1 + vector_dim2);
+	//printf("%lld %lld\n", num_vertices, vector_dim1 + vector_dim2);
 	for (a = 0; a < num_vertices; a++) {
 		output_vertices.push_back(std::string(vertex[a].name));
 		len = 0;
@@ -197,16 +197,16 @@ void ConcatenateMain(const std::vector<std::string> &first_order_vertices, const
 	}
 }
 
-static void OutputVectors(std::vector<std::string> &output_vertices, std::vector< std::vector<double> > &output_features) {
+/*static void OutputVectors(std::vector<std::string> &output_vertices, std::vector< std::vector<double> > &output_features) {
 	FILE *fo = fopen(output_file, "wb");
 	long long rows = (long long) output_features.size();
 	long long cols = (long long) output_features[0].size();
-	fprintf(fo, "%lld %lld\n", rows, cols);
+	//fprintf(fo, "%lld %lld\n", rows, cols);
 	for (long long a = 0; a < rows; a++)
 	{
 		fprintf(fo, "%s ", output_vertices[a].c_str());
-		if (binary) for (long long b = 0; b < cols; b++) fwrite(&output_features[a][b], sizeof(real), 1, fo);
-		else for (long long b = 0; b < cols; b++) fprintf(fo, "%lf ", output_features[a][b]);
+		if (binary) for (long long b = 0; b < cols; b++) //fwrite(&output_features[a][b], sizeof(real), 1, fo);
+		else for (long long b = 0; b < cols; b++) //fprintf(fo, "%lf ", output_features[a][b]);
 		fprintf(fo, "\n");
 	}
 	fclose(fo);
@@ -223,4 +223,4 @@ static int ArgPos(char *str, int argc, char **argv) {
 		return a;
 	}
 	return -1;
-}
+}*/

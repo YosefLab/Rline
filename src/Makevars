@@ -1,2 +1,2 @@
 PKG_LIBS = -lgsl -lm -lgslcblas -pthread
-PKG_CPPFLAGS = -pthread -Wall -Wno-unused-result
+PKG_CPPFLAGS = -pthread 

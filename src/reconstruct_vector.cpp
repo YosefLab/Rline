@@ -99,6 +99,7 @@ static int AddVertex(char *name)
 	return num_vertices - 1;
 }
 
+/*
 static int ArgPos(char *str, int argc, char **argv) {
 	int a;
 	for (a = 1; a < argc; a++) if (!strcmp(str, argv[a])) {
@@ -110,8 +111,9 @@ static int ArgPos(char *str, int argc, char **argv) {
 	}
 	return -1;
 }
+*/
 
-static void ReadVectors(std::vector<std::string> &input_u, std::vector<std::string> &input_v, std::vector<double> &input_w) {
+/*static void ReadVectors(std::vector<std::string> &input_u, std::vector<std::string> &input_v, std::vector<double> &input_w) {
         FILE *fin;
         char name_v1[MAX_STRING], name_v2[MAX_STRING], str[2 * MAX_STRING + 10000];
         double weight;
@@ -137,7 +139,7 @@ static void ReadVectors(std::vector<std::string> &input_u, std::vector<std::stri
                 input_w.push_back(weight);
         }
         fclose(fin);
-}
+}*/
 
 /* Read network from the training file */
 static void VectorReadData(const std::vector<std::string> &input_u, const std::vector<std::string> &input_v, const std::vector<double> input_w)
@@ -156,11 +158,11 @@ static void VectorReadData(const std::vector<std::string> &input_u, const std::v
 		strcpy(name_v2, input_v[k].c_str());
 		weight = input_w[k];
 
-		if (k % 10000 == 0)
+		/*if (k % 10000 == 0)
 		{
 			printf("Reading edges: %.3lf%%%c", k / (double)(num_edges + 1) * 100, 13);
 			fflush(stdout);
-		}
+		}*/
 
 		vid = SearchHashTable(name_v1);
 		if (vid == -1) vid = AddVertex(name_v1);
@@ -170,7 +172,7 @@ static void VectorReadData(const std::vector<std::string> &input_u, const std::v
 		if (vid == -1) vid = AddVertex(name_v2);
 		vertex[vid].degree += weight;
 	}
-	printf("Number of vertices: %d          \n", num_vertices);
+	//printf("Number of vertices: %d          \n", num_vertices);
 
 	neighbor = new std::vector<Neighbor>[num_vertices];
 	rank_list = (Neighbor *)calloc(num_vertices, sizeof(Neighbor));
@@ -181,11 +183,11 @@ static void VectorReadData(const std::vector<std::string> &input_u, const std::v
 		strcpy(name_v2, input_v[k].c_str());
 		weight = input_w[k];
 
-		if (k % 10000 == 0)
+		/*if (k % 10000 == 0)
 		{
 			printf("Reading neighbors: %.3lf%%%c", k / (double)(num_edges + 1) * 100, 13);
 			fflush(stdout);
-		}
+		}*/
 
 		u = SearchHashTable(name_v1);
 
@@ -195,7 +197,7 @@ static void VectorReadData(const std::vector<std::string> &input_u, const std::v
 		nb.weight = weight;
 		neighbor[u].push_back(nb);
 	}
-	printf("\n");
+	//printf("\n");
 
 	for (int k = 0; k != num_vertices; k++)
 	{
@@ -216,11 +218,11 @@ static void VectorReconstruct(std::vector<std::string> &output_u, std::vector<st
 
 	for (sv = 0; sv != num_vertices; sv++)
 	{
-		if (sv % 10 == 0)
+		/*if (sv % 10 == 0)
 		{
 			printf("%cProgress: %.3lf%%", 13, (real)sv / (real)(num_vertices + 1) * 100);
 			fflush(stdout);
-		}
+		}*/
 
 		while (!node.empty()) node.pop();
 		while (!depth.empty()) depth.pop();
@@ -299,8 +301,8 @@ static void VectorReconstruct(std::vector<std::string> &output_u, std::vector<st
 			num_edges_renet++;
 		}
 	}
-	printf("\n");
-	printf("Number of edges in reconstructed network: %lld\n", num_edges_renet);
+	//printf("\n");
+	//printf("Number of edges in reconstructed network: %lld\n", num_edges_renet);
 	return;
 }
 
@@ -310,10 +312,11 @@ void ReconstructMain(const std::vector<std::string> &input_u, const std::vector<
 	vertex = (struct ClassVertex *)calloc(max_num_vertices, sizeof(struct ClassVertex));
 	max_depth = maximum_depth;
 	max_k = maximum_k;
-	if (max_depth == 0) {
+	/*if (max_depth == 0) {
 	  printf("You cannot have a max_depth of zero, this will cause malloc problems and system thrashing");
 	  return;
-	}
+	}*/
+    if (max_depth == 0) return;
 	InitHashTable();
 	VectorReadData(input_u, input_v, input_w);
 	VectorReconstruct(output_u, output_v, output_w);
