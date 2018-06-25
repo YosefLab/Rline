@@ -1,1 +1,6 @@
 ^\.travis\.yml$
+^\.gitignore$
+^\.git$
+^R/\.\.Rcheck$
+^\./\.\.Rcheck$
+^src/\.gitignore$
