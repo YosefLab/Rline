@@ -1,0 +1,44 @@
+Comprehehnsive Test Descriptions
+Test #-type of test, graph type, edge type, vertices, edges
+test 0-tiny, tree, words, 4 vertices, 3 edges
+test 1-tiny, complete, words, 4 vertices, 6 edges
+test 2-tiny, tree, ints, 5 vertices, 7 edges
+test 3-tiny, standard, ints, 5 vertices, 4 edges
+test 4-tiny, complete, ints, 5 vertices, 10 edges
+
+test 5-small, tree, words, 10 vertices, 9 edges
+test 6-small, standard, words, 10 vertices, 25 edges 
+test 7-small, complete, words, 10 vertices 45 edges 
+test 8-small, tree, ints, 10 vertices, 9 edges
+test 9-small, standard, ints, 10 vertices, 25 edges 
+test 10-small, complete, ints, 10 vertices, 45 edges 
+test 11-small, tree, unweighted, 10 vertices, 9 edges
+test 12-small, standard, unweighted, 10 vertices, 25 edges 
+test 13-small, complete, unweighted, 10 vertices, 45 edges 
+
+test 14-medium, tree, words, 100 vertices, 99  edges
+test 15-medium, standard, words, 100 vertices, 1000 edges 
+test 13-medium, complete, words, 100 vertices 4950 edges 
+test 14-medium, tree, ints, 100 vertices, 99 edges
+test 15-medium, standard, ints, 100 vertices, 1000 edges 
+test 16-medium, complete, ints, 100 vertices, 4950 edges 
+
+test 17-big, standard, words, 1000 vertices, 100,000 edges
+test 18-big, tree, int, 1000 vertices, 999 edges
+test 19-big, standard, int, 1000 vertices, 100,000 edges
+test 20-big, complete, int, 1000 vertices, 499,500 edges
+
+test 21-huge, standard, int, 100,000 vertices, 1 million edges
+test 22-huge, standard, int, 100,000 vertices, 10 million edges
+test 23-huge , Youtube file standard,  ints,  ~5 million edges
+
+tests generated with either https://spojtoolkit.com/TestCaseGenerator/
+or https://github.com/MikeMirzayanov/testlib/blob/master/generators/gen-tree-graph.cpp 
+
+
+Temporary Test Descriptions
+test 1-tiny, standard, words, 4 vertices, 6 edges
+test 2-small, standard, ints, 5 vertices, 10 edges
+test 3-medium, standard, ints, 100 vertices, 1000 edges
+test 4-big, standard, int, 1000 vertices, 100,000 edges 
+test 5-huge, youtube, int, 5 million edges
