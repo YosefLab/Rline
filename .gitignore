@@ -52,3 +52,4 @@ test_cases/ref_inputs/*
 # Misc
 misc/*
 tmp
+.git
