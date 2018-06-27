@@ -1,5 +1,5 @@
 Package: rline
-Title: R wrappers for the line graph-embedding algorithm
+Title: R Wrappers for the Line Graph-Embedding Algorithm
 Version: 0.0.1
 Author: c(
     person("Charles", "Tang", email = "j316chuck@berkeley.edu", role = c("aut", "cre")), 
