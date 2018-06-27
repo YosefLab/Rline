@@ -3,8 +3,6 @@
 language: R
 sudo: false
 cache: packages
-addons:
-    apt:
-        packages:
-            - libgsl0ldbl
-
+os:  osx
+before_install:
+    - brew install gsl 
