@@ -47,7 +47,6 @@
 #' reconstruct(df, max_depth = 2)
 #' reconstruct(df, max_depth = 2, max_k = 2)
 reconstruct <- function(df, max_depth = 1, max_k = 0) {
-  print(max_depth)
   return(reconstruct_caller(as.character(df[, 1]), as.character(df[, 2]), as.numeric(df[, 3]), max_depth, max_k))
 }
 

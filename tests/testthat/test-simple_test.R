@@ -35,7 +35,7 @@ test_that("simple line works", {
    colnames(line_matrix) <- NULL
    colnames(expected_matrix) <- NULL
    
-   expect_equal(line_matrix, expected_matrix, tolerance = 1e-5, scale = 1)
+   expect_equal(line_matrix, expected_matrix, tolerance = 1e-2, scale = 1)
 })
 
 test_that("simple concatenate works", {
@@ -55,7 +55,7 @@ test_that("simple concatenate works", {
    rownames(expected_matrix) <- output_df[, 1]
    colnames(expected_matrix) <- colnames(concatenate_matrix) <- NULL  
    
-   expect_equal(concatenate_matrix, expected_matrix, tolerance = 1e-5, scale = 1)
+   expect_equal(concatenate_matrix, expected_matrix, tolerance = 1e-2, scale = 1)
   
 })
 
@@ -73,5 +73,5 @@ test_that("simple normalize works", {
   rownames(expected_matrix) <- output_df[, 1]
   colnames(expected_matrix) <- colnames(normalize_matrix) <- NULL  
     
-  expect_equal(normalize_matrix, expected_matrix, tolerance = 1e-5, scale = 1)
+  expect_equal(normalize_matrix, expected_matrix, tolerance = 1e-2, scale = 1)
 })
