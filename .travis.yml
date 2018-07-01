@@ -5,6 +5,6 @@ sudo: false
 cache: packages
 os:  osx
 before_install:
-    -brew install gsl
+    - brew install gsl
 warnings_are_errors: false
  
