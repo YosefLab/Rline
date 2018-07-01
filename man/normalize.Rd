@@ -25,9 +25,9 @@ w <- 1:3
 df <- data.frame(u, v, w)
 new_df <- reconstruct(df)
 order_1 <- line(df = new_df, binary = 0, dim = 100,
-          order = 1, negative = 5, samples = 10, rho = 0.025, threads = 1)
+          order = 1, negative = 5, samples = 1, rho = 0.025, threads = 1)
 order_2 <- line(df = new_df, binary = 0, dim = 100,
-          order = 2, negative = 5, samples = 10, rho = 0.025, threads = 1) 
+          order = 2, negative = 5, samples = 1, rho = 0.025, threads = 1) 
 concatenate_matrix <- concatenate(input_one = order_1, 
                      input_two = order_2, binary = 0)
 normalize_matrix <- normalize(input_matrix = concatenate_matrix)
