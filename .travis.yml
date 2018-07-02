@@ -3,8 +3,10 @@
 language: R
 sudo: false
 cache: packages
-os:  osx
+os:
+    - osx
+    - linux
 before_install:
-    - brew install gsl
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gsl; else sudo apt-get install libsl0-dev; fi
 warnings_are_errors: false
  
