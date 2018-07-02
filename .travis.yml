@@ -7,6 +7,6 @@ os:
     - osx
     - linux
 before_install:
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gsl; else sudo apt-get install libsl0-dev; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gsl; else sudo apt-get install libgsl0-dev; fi
 warnings_are_errors: false
  
