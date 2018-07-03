@@ -20,6 +20,7 @@ Publication: Jian Tang, Meng Qu, Mingzhe Wang, Ming Zhang, Jun Yan, Qiaozhu Mei.
 #include <gsl/gsl_rng.h>
 #include <vector> 
 #include <string> 
+#include <R.h>
 
 #define MAX_STRING 100
 #define SIGMOID_BOUND 6
@@ -119,7 +120,7 @@ static void InitAliasTable()
 	if (alias == NULL || prob == NULL)
 	{
 		//printf("Error: memory allocation failed!\n");
-		exit(1);
+		//exit(1); // Not supposed to do this in R
 	}
 
 	double *norm_prob = (double*)malloc(num_edges*sizeof(double));
@@ -128,7 +129,7 @@ static void InitAliasTable()
 	if (norm_prob == NULL || large_block == NULL || small_block == NULL)
 	{
 		//printf("Error: memory allocation failed!\n");
-		exit(1);
+		//exit(1); // Not supposed to do this in R
 	}
 
 	double sum = 0;
@@ -176,16 +177,16 @@ static long long SampleAnEdge(double rand_value1, double rand_value2)
 /* Initialize the vertex embedding and the context embedding */
 static void InitVector()
 {
-	srand(1);
 	long long a, b;
 
 	a = posix_memalign((void **)&emb_vertex, 128, (long long)num_vertices * dim * sizeof(real));
-	if (emb_vertex == NULL) { exit(1); } //printf("Error: memory allocation failed\n"); exit(1); }
+    // Can't 'exit' in R
+	// if (emb_vertex == NULL) { exit(1); } //printf("Error: memory allocation failed\n"); exit(1); }
 	for (b = 0; b < dim; b++) for (a = 0; a < num_vertices; a++)
-		emb_vertex[a * dim + b] = (rand() / (real)RAND_MAX - 0.5) / dim;
+		emb_vertex[a * dim + b] = (unif_rand() - 0.5) / dim;
 
 	a = posix_memalign((void **)&emb_context, 128, (long long)num_vertices * dim * sizeof(real));
-	if (emb_context == NULL) { exit(1); }//{ printf("Error: memory allocation failed\n"); exit(1); }
+	// if (emb_context == NULL) { exit(1); }//{ printf("Error: memory allocation failed\n"); exit(1); }
 	for (b = 0; b < dim; b++) for (a = 0; a < num_vertices; a++)
 		emb_context[a * dim + b] = 0;
 }
@@ -316,7 +317,7 @@ static void VectorReadData(const std::vector<std::string> &input_u, const std::v
 	if (edge_source_id == NULL || edge_target_id == NULL || edge_weight == NULL)
 	{
 		//printf("Error: memory allocation failed!\n");
-		exit(1);
+		//exit(1);
 	}
 
 	num_vertices = 0;
