@@ -38,7 +38,12 @@ Rcpp::NumericMatrix line_caller(Rcpp::StringVector input_u, Rcpp::StringVector i
 
   TrainLINEMain(iu, iv, iw, output_vertices, output_features, binary, dim, order, negative, samples, rho, threads);
 
-  long long row = (long long) output_features.size(), col = (long long) output_features[0].size();
+  long long row = (long long) output_features.size();
+  if (row == 0) {
+      Rprintf("Error occured in line");
+      return R_NilValue;
+  }
+  long long col = (long long) output_features[0].size();
   Rcpp::NumericMatrix feature_matrix(row, col);
   Rcpp::StringVector vertice_names(row);
   vertice_names = output_vertices;

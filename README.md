@@ -69,10 +69,10 @@ The line and reconstruct functions have quite long execution times, especially l
 
 
 ## Differences between Rline and LINE C++
-- Rline wraps the original LINE C++ files compiled without the options -march=native and -Ofast. This is too make the outputs deterministic. 
+- Rline wraps the original LINE C++ files compiled without the options -march=native and -Ofast. 
 - There are precision differences between LINE and Rline's normalize function due to floating point arithmetic differences between C++ and R (roughly 1e-6 in magnitude). 
 - Please call all functions with binary option set to 0 as Rline cannot output binary formatted data unlike the original LINE C++ Files.
-- The seed in Rline has been preset to a fixed number so your results should be deterministic if you use the same inputs and same parameters. 
+- To get deterministic results, please set the seed using set.seed() when calling the line function as seen in the testthat cases
 - The multithreaded option to call the line function is not supported by Rline unlike in the LINE C++ file. Thus, please call line with the threads parameter as 1. 
 - All malloc issues (which should not happen unless your data is really big) should cause an exit to the program. 
 

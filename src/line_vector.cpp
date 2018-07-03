@@ -48,6 +48,7 @@ static real *emb_vertex, *emb_context, *sigmoid_table;
 
 static int *edge_source_id, *edge_target_id;
 static double *edge_weight;
+static int malloc_exit = 0;
 
 // Parameters for edge sampling
 static long long *alias;
@@ -119,18 +120,20 @@ static void InitAliasTable()
 	prob = (double *)malloc(num_edges*sizeof(double));
 	if (alias == NULL || prob == NULL)
 	{
-		//printf("Error: memory allocation failed!\n");
-		//exit(1); // Not supposed to do this in R
-	}
+		Rprintf("Error: memory allocation failed!\n");
+        malloc_exit = 1;
+        return;
+    }
 
 	double *norm_prob = (double*)malloc(num_edges*sizeof(double));
 	long long *large_block = (long long*)malloc(num_edges*sizeof(long long));
 	long long *small_block = (long long*)malloc(num_edges*sizeof(long long));
 	if (norm_prob == NULL || large_block == NULL || small_block == NULL)
 	{
-		//printf("Error: memory allocation failed!\n");
-		//exit(1); // Not supposed to do this in R
-	}
+		Rprintf("Error: memory allocation failed!\n");
+	    malloc_exit = 1;
+        return;
+    }
 
 	double sum = 0;
 	long long cur_small_block, cur_large_block;
@@ -180,13 +183,12 @@ static void InitVector()
 	long long a, b;
 
 	a = posix_memalign((void **)&emb_vertex, 128, (long long)num_vertices * dim * sizeof(real));
-    // Can't 'exit' in R
-	// if (emb_vertex == NULL) { exit(1); } //printf("Error: memory allocation failed\n"); exit(1); }
+	if (emb_vertex == NULL) { malloc_exit = 1; Rprintf("Error: memory allocation failed\n"); return; }
 	for (b = 0; b < dim; b++) for (a = 0; a < num_vertices; a++)
 		emb_vertex[a * dim + b] = (unif_rand() - 0.5) / dim;
 
 	a = posix_memalign((void **)&emb_context, 128, (long long)num_vertices * dim * sizeof(real));
-	// if (emb_context == NULL) { exit(1); }//{ printf("Error: memory allocation failed\n"); exit(1); }
+	if (emb_context == NULL) { malloc_exit = 1; Rprintf("Error: memory allocation failed\n"); return; }
 	for (b = 0; b < dim; b++) for (a = 0; a < num_vertices; a++)
 		emb_context[a * dim + b] = 0;
 }
@@ -316,8 +318,9 @@ static void VectorReadData(const std::vector<std::string> &input_u, const std::v
 	edge_weight = (double *)malloc(num_edges*sizeof(double));
 	if (edge_source_id == NULL || edge_target_id == NULL || edge_weight == NULL)
 	{
-		//printf("Error: memory allocation failed!\n");
-		//exit(1);
+		Rprintf("Error: memory allocation failed!\n");
+        malloc_exit = 1;
+        return;
 	}
 
 	num_vertices = 0;
@@ -386,6 +389,7 @@ void TrainLINEMain(const std::vector<std::string> &input_u, const std::vector<st
 	init_rho = init_rho_param;
 	num_threads = num_threads_param;
 	current_sample_count = 0;
+    GetRNGstate();
 
 	total_samples *= 1000000;
 	rho = init_rho;
@@ -393,12 +397,12 @@ void TrainLINEMain(const std::vector<std::string> &input_u, const std::vector<st
 	long a;
 	pthread_t *pt = (pthread_t *)malloc(num_threads * sizeof(pthread_t));
 
-	/*if (order != 1 && order != 2)
+	if (order != 1 && order != 2)
 	{
-		printf("Error: order should be either 1 or 2!\n");
-		exit(1);
+		Rprintf("Error: order should be either 1 or 2!\n");
+		return;
 	}
-	printf("--------------------------------\n");
+	/*printf("--------------------------------\n");
 	printf("Binary: %d\n", is_binary);
 	printf("Order: %d\n", order);
 	printf("Samples: %lldM\n", total_samples / 1000000);
@@ -409,9 +413,12 @@ void TrainLINEMain(const std::vector<std::string> &input_u, const std::vector<st
 	printf("--------------------------------\n");
     */
 	InitHashTable();
-	VectorReadData(input_u, input_v, input_w); //ReadData();
+	VectorReadData(input_u, input_v, input_w); 
+	if (malloc_exit != 0) { return; }
 	InitAliasTable();
+	if (malloc_exit != 0) { return; }
 	InitVector();
+	if (malloc_exit != 0) { return; }
 	InitNegTable();
 	InitSigmoidTable();
 
@@ -419,12 +426,16 @@ void TrainLINEMain(const std::vector<std::string> &input_u, const std::vector<st
 	gsl_T = gsl_rng_rand48;
 	gsl_r = gsl_rng_alloc(gsl_T);
 	gsl_rng_set(gsl_r, 314159265);
-
+    
+    Rprintf ("generator type: %s\n", gsl_rng_name (gsl_r));
+    Rprintf ("seed = %lu\n", gsl_rng_default_seed);
+    Rprintf ("first value = %lu\n", gsl_rng_get (gsl_r));
 	clock_t start = clock();
 	//printf("--------------------------------\n");
 	for (a = 0; a < num_threads; a++) pthread_create(&pt[a], NULL, TrainLINEThread, (void *)a);
 	for (a = 0; a < num_threads; a++) pthread_join(pt[a], NULL);
 	//printf("\n");
+    PutRNGstate();
 	clock_t finish = clock();
 	//printf("Total time: %lf\n", (double)(finish - start) / CLOCKS_PER_SEC);
 

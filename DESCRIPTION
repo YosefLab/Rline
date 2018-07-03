@@ -1,12 +1,11 @@
 Package: rline
 Title: R Wrappers for the Line Graph-Embedding Algorithm
 Version: 0.0.1
-Author: c(
-    person("Charles", "Tang", email = "j316chuck@berkeley.edu", role = c("aut", "cre")), 
+Author: c(person("Charles", "Tang", email = "j316chuck@berkeley.edu", role = c("aut", "cre")), 
     person("David", "Detomasa", email = "david.detomaso@berkeley.edu", role = c("aut")))
 Maintainer: Charles Tang <chuck.tang98@gmail.com>
 Description: R wrapper functions written around the LINE graph-embedding algorithm. 
-Depends: R (>= 3.4.0)
+Depends: R (>= 3.4.0) 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports: Rcpp (>= 0.12.0)
@@ -15,4 +14,4 @@ LazyData: true
 RoxygenNote: 6.0.1
 Suggests: testthat
 NeedsCompilation: yes
-Packaged: 2018-06-25 03:49:10 UTC; j316chuck
+Packaged: 2018-07-01 07:32:07 UTC; j316chuck

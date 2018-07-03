@@ -59,9 +59,10 @@ on two orders, order 1 and order 2 which return different numeric matrices
 for the same graph input. There are other parameters which determine the amount of sampling, 
 negative sampling, learning rate, etc. of the algorithm which you should look into.
 This function returns a reduced graph represented in the form of a numeric matrix.
-This numeric matrix has row names describing the vertices with each vertice  
+This numeric matrix has row names describing the vertices with each vertice. 
 This reconstructed graph can be passed into line to run the main line algorithm for 
-graph embedding
+graph embedding. 
+If malloc fails because your graph size is too big, this program will return a NULL matrix.
 }
 \examples{
 u <- c("good", "the", "bad")
